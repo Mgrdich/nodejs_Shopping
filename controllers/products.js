@@ -1,6 +1,6 @@
-const products= [];
+const products = [];
 
-exports.getProductPage = (req,res)=>{
+exports.getProductPage = (req, res) => {
     res.render('add-product', {
         pageTitle: 'Add Product',
         path: '/admin/add-product',
@@ -10,7 +10,7 @@ exports.getProductPage = (req,res)=>{
     });
 };
 
-exports.postProductPage =  (req, res) => {
+exports.postProductPage = (req, res) => {
     products.push({title: req.body.title});
     res.redirect('/');
 };
