@@ -10,4 +10,4 @@ router.get('/add-product', getProductPage);
 
 router.post('/add-product', postProductPage);
 
-module.exports = router;
+    module.exports = router;
