@@ -9,17 +9,22 @@ const p = path.join(
 );
 
 
+const getProdcutFromFile = cb => {
+    fs.readFile(p, (err, fileContext) => {
+        if (err) {
+            cb([]);
+        }
+        cb(JSON.parse(fileContext));
+    });
+};
+
 module.exports = class Products {
     constructor(title) {
         this.title = title;
     }
 
     save() {
-        fs.readFile(p, (err, fileContent) => {
-            let products = [];
-            if (!err) {
-                // products = JSON.parse(fileContent);
-            }
+        getProdcutFromFile((products) => {
             products.push(this);
             fs.writeFile(p, JSON.stringify(products), (errnoError) => {
                 console.log(errnoError);
@@ -27,12 +32,7 @@ module.exports = class Products {
         });
     }
 
-    static fetchAll() {
-        fs.readFile(p, (err, fileContext) => {
-            if (err) {
-                return [];
-            }
-            return JSON.parse(fileContext);
-        });
+    static fetchAll(cb) {
+        getProdcutFromFile(cb);
     }
 };
