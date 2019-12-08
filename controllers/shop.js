@@ -13,6 +13,7 @@ exports.getProducts = (req, res) => {
 
     });
 };
+
 exports.getIndex = (req, res) => {
     Product.fetchAll((products) => { //given to it when it is passed
         res.render('shop/index', {
@@ -27,9 +28,7 @@ exports.getIndex = (req, res) => {
     });
 };
 
-
 exports.getCart = (req, res) => {
-    console.log(req);
     res.render('shop/cart', {
         path: '/cart',
         pageTitle: 'Your Cart',
@@ -37,9 +36,15 @@ exports.getCart = (req, res) => {
 };
 
 exports.getCheckout = (req, res) => {
-    console.log(req);
     res.render('shop/checkout', {
         path: '/checkout',
         pageTitle: 'Checkout',
+    })
+};
+
+exports.getOrders = (req, res) => {
+    res.render('shop/orders', {
+        path: '/orders',
+        pageTitle: 'Orders',
     })
 };
