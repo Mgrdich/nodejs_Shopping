@@ -1,4 +1,4 @@
-const {getAddProduct, postProductPage} = require("../controllers/admin");
+const {getAddProduct, postProductPage,getProducts} = require("../controllers/admin");
 const {Router} = require('express');
 
 // const path = require('path');
@@ -7,7 +7,7 @@ const router = Router();
 
 router.get('/add-product', getAddProduct);
 
-// router.get('/product', getAddProduct); //change it
+router.get('/product', getProducts);
 
 router.post('/add-product', postProductPage);
 

@@ -15,3 +15,17 @@ exports.postProductPage = (req, res) => {
     product.save();
     res.redirect('/');
 };
+
+exports.getProducts = (req, res) => {
+    Product.fetchAll((products) => { //given to it when it is passed
+        res.render('admin/products', {
+            prods: products,
+            pageTitle: 'Admin Products',
+            path: '/admin/product',
+            hasProducts: products.length > 0,
+            activeShop: true,
+            productCSS: true
+        });
+
+    });
+};
