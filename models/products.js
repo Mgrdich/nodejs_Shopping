@@ -9,7 +9,7 @@ const p = path.join(
 );
 
 
-const getProdcutFromFile = cb => {
+const getProductFromFile = cb => {
     fs.readFile(p, (err, fileContext) => {
         if (err) {
             cb([]);
@@ -24,7 +24,7 @@ module.exports = class Products {
     }
 
     save() {
-        getProdcutFromFile((products) => {
+        getProductFromFile((products) => {
             products.push(this);
             fs.writeFile(p, JSON.stringify(products), (errnoError) => {
                 console.log(errnoError);
@@ -33,6 +33,6 @@ module.exports = class Products {
     }
 
     static fetchAll(cb) {
-        getProdcutFromFile(cb);
+        getProductFromFile(cb);
     }
 };
