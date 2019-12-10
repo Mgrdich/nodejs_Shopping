@@ -16,10 +16,14 @@ exports.getProducts = (req, res) => {
 
 exports.getProduct = (req, res) => {
     const prodId = req.params.productId;
-    Product.findById(prodId,product=>{
-        
+    Product.findById(prodId, product => {
+        res.render('shop/product-detail', {
+            product: product,
+            pageTitle: product.title,
+            path: `/products`,
+        });
+
     });
-    res.redirect('/');
 };
 
 exports.getIndex = (req, res) => {
@@ -41,6 +45,13 @@ exports.getCart = (req, res) => {
         path: '/cart',
         pageTitle: 'Your Cart',
     });
+};
+
+exports.postCart = (req, res) => {
+    const prodID = req.body.productId;
+    console.log(prodID);
+    res.redirect('/');
+
 };
 
 exports.getCheckout = (req, res) => {
