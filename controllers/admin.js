@@ -20,6 +20,19 @@ exports.postAddProduct = (req, res) => {
     res.redirect('/');
 };
 
+exports.getEditProduct = (req, res) => {
+    const editMode = req.query.edit;
+    console.log(editMode);
+    if (!editMode) {
+        return res.redirect('/');
+    }
+    res.render('admin/edit-product', {
+        pageTitle: 'Edit Product',
+        path: '/admin/edit-product',
+        editing: editMode
+    });
+};
+
 exports.getProducts = (req, res) => {
     Product.fetchAll((products) => { //given to it when it is passed
         res.render('admin/products', {
