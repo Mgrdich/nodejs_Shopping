@@ -20,22 +20,39 @@ exports.postAddProduct = (req, res) => {
 
 exports.getEditProduct = (req, res) => {
     const editMode = req.query.edit;
-    console.log(editMode);
     if (!editMode) {
         return res.redirect('/');
     }
     const prodId = req.params.productId;
-    Product.findById(prodId,product=>{
-        if(!product) {
+    Product.findById(prodId, product => {
+        if (!product) {
             res.redirect('/');
         }
         res.render('admin/edit-product', {
             pageTitle: 'Edit Product',
             path: '/admin/edit-product',
             editing: editMode,
-            product:product
+            product: product
         });
     });
+};
+
+exports.postEditProduct = (req, res, next) => {
+    const prodId = req.body.productId;
+    const updatedTitle = req.body.title;
+    const updatedPrice = req.body.price;
+    const updatedImageUrl = req.body.imageUrl;
+    const updatedDesc = req.body.description;
+    console.log(prodId,updatedTitle,updatedPrice,updatedImageUrl,updatedDesc);
+    const updatedProduct = new Product(
+        prodId,
+        updatedTitle,
+        updatedImageUrl,
+        updatedDesc,
+        updatedPrice
+    );
+    updatedProduct.save();
+    res.redirect('/admin/products');
 };
 
 exports.getProducts = (req, res) => {
@@ -43,7 +60,7 @@ exports.getProducts = (req, res) => {
         res.render('admin/products', {
             prods: products,
             pageTitle: 'Admin Products',
-            path: '/admin/product',
+            path: '/admin/products',
             hasProducts: products.length > 0,
             activeShop: true,
             productCSS: true
