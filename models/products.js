@@ -9,7 +9,7 @@ const p = path.join(
 );
 
 
-const getProductFromFile = cb => {
+const getProductsFromFile = cb => {
     fs.readFile(p, (err, fileContext) => {
         if (err) {
             cb([]);
@@ -28,7 +28,7 @@ module.exports = class Products {
     }
 
     save() {
-        getProductFromFile(products => {
+        getProductsFromFile(products => {
             if (this.id) {
                 const existingProductIndex = products.findIndex(
                     prod => prod.id === this.id
@@ -49,13 +49,23 @@ module.exports = class Products {
     }
 
     static fetchAll(cb) {
-        getProductFromFile(cb);
+        getProductsFromFile(cb);
     }
 
     static findById(id, cb) {
-        getProductFromFile(products => {
+        getProductsFromFile(products => {
             const product = products.find(p => p.id === id);
             cb(product);
         })
+    }
+
+    static deleteById(id) {
+        getProductsFromFile(products => {
+            const filteredProducts = products.filter(item => item.id !== id);
+            fs.writeFile(p, JSON.stringify(filteredProducts), err => {
+                console.log(err);
+            })
+        });
+
     }
 };
