@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const app = express();
 const path = require('path');
 const {get404} = require("./controllers/error");
+const {db} = require('./util/database');
+
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
