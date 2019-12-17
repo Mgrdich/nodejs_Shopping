@@ -12,7 +12,11 @@ module.exports = class Products {
     }
 
     save() {
-
+        console.log(this);
+        return db.execute(
+            'insert into products values(?,?,?,?,?)',
+            [this.title, this.description, this.imageUrl, this.price]
+        );
     }
 
     static fetchAll() {

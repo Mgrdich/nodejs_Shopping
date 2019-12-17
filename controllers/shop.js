@@ -2,14 +2,16 @@ const Product = require("../models/products");
 const Cart = require("../models/cart");
 
 exports.getProducts = (req, res) => {
-    Product.fetchAll((products) => { //given to it when it is passed
-        res.render('shop/product-list', {
-            prods: products,
-            pageTitle: 'All Products',
-            path: '/products',
-            hasProducts: products.length > 0,
-        });
-
+    Product.fetchAll()
+        .then(function ([data]) {
+            res.render('shop/product-list', {
+                prods: data,
+                pageTitle: 'All Products',
+                path: '/products',
+                hasProducts: data.length > 0,
+            });
+        }).catch(function (err) {
+        console.log(err);
     });
 };
 
@@ -27,17 +29,16 @@ exports.getProduct = (req, res) => {
 
 exports.getIndex = (req, res) => {
     Product.fetchAll()
-        .then(function ([rows]) {
+        .then(function ([data]) {
             res.render('shop/index', {
-                prods: rows,
+                prods: data,
                 pageTitle: 'Shop',
                 path: '/',
-                hasProducts: rows.length > 0,
+                hasProducts: data.length > 0,
             });
-        })
-        .catch(function (err) {
+        }).catch(function (err) {
             console.log(err);
-        });
+    });
 };
 
 exports.getCart = (req, res) => {

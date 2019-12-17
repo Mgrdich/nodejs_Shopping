@@ -50,21 +50,28 @@ exports.postEditProduct = (req, res, next) => {
         updatedDesc,
         updatedPrice
     );
-    updatedProduct.save();
-    res.redirect('/admin/products');
+    updatedProduct.save()
+        .then(function () {
+            res.redirect('/admin/products');
+        }).catch(function (err) {
+        console.log(err);
+    })
+
 };
 
 exports.getProducts = (req, res) => {
-    Product.fetchAll((products) => { //given to it when it is passed
-        res.render('admin/products', {
-            prods: products,
-            pageTitle: 'Admin Products',
-            path: '/admin/products',
-            hasProducts: products.length > 0,
-            activeShop: true,
-            productCSS: true
-        });
-
+    Product.fetchAll()
+        .then(function ([data]) {
+            res.render('admin/products', {
+                prods: data,
+                pageTitle: 'Admin Products',
+                path: '/admin/products',
+                hasProducts: data.length > 0,
+                activeShop: true,
+                productCSS: true
+            });
+        }).catch(function (err) {
+        console.log(err);
     });
 };
 
