@@ -26,15 +26,18 @@ exports.getProduct = (req, res) => {
 };
 
 exports.getIndex = (req, res) => {
-    Product.fetchAll((products) => { //given to it when it is passed
-        res.render('shop/index', {
-            prods: products,
-            pageTitle: 'Shop',
-            path: '/',
-            hasProducts: products.length > 0,
+    Product.fetchAll()
+        .then(function ([rows]) {
+            res.render('shop/index', {
+                prods: rows,
+                pageTitle: 'Shop',
+                path: '/',
+                hasProducts: rows.length > 0,
+            });
+        })
+        .catch(function (err) {
+            console.log(err);
         });
-
-    });
 };
 
 exports.getCart = (req, res) => {
