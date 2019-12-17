@@ -12,9 +12,8 @@ module.exports = class Products {
     }
 
     save() {
-        console.log(this);
         return db.execute(
-            'insert into products values(?,?,?,?,?)',
+            'insert into products values(default,?,?,?,?)',
             [this.title, this.description, this.imageUrl, this.price]
         );
     }
@@ -24,7 +23,7 @@ module.exports = class Products {
     }
 
     static findById(id) {
-
+       return  db.execute('select * from products where id=?',[id])
     }
 
     static deleteById(id) {
