@@ -45,39 +45,46 @@ exports.getIndex = (req, res) => {
 
 exports.getCart = (req, res) => {
     Cart.getCart(cart => {
-        Product.fetchAll(products => {
-            const cartProducts = [];
-            for (let product of products) {
-                const cartProductData = cart.products.find(
-                    prod => prod.id === product.id
-                );
-                if (cartProductData) {
-                    cartProducts.push({productData: product, qty: cartProductData.qty}); //is created here locally
+        Product.fetchAll()
+            .then(function ([products]) {
+                const cartProducts = [];
+                for (let product of products) {
+                    const cartProductData = cart.products.find(
+                        prod => prod.id === product.id
+                    );
+                    if (cartProductData) {
+                        cartProducts.push({productData: product, qty: cartProductData.qty}); //is created here locally
+                    }
                 }
-            }
-            res.render('shop/cart', {
-                path: '/cart',
-                pageTitle: 'Your Cart',
-                products: cartProducts
-            });
-        });
+                res.render('shop/cart', {
+                    path: '/cart',
+                    pageTitle: 'Your Cart',
+                    products: cartProducts
+                });
+
+            }).catch(function (err) {
+            console.log(err);
+        })
     });
 };
 
 exports.postCart = (req, res) => {
     const prodId = req.body.productId;
-    Product.findById(prodId, product => {
-        Cart.addProduct(prodId, product.price);
-    });
-    res.redirect('/cart');
+    Product.findById(prodId)
+        .then(function ([product]) {
+            Cart.addProduct(prodId, product[0].price);
+            res.redirect('/cart');
+        });
+
 };
 
 exports.postCartDeleteProduct = (req, res) => {
     const prodId = req.body.productId;
-    Product.findById(prodId, product => {
-        Cart.deleteProduct(prodId, product.price);
-        res.redirect('/cart');
-    });
+    Product.findById(prodId)
+        .then(function ([product]) {
+            Cart.deleteProduct(prodId, product.price);
+            res.redirect('/cart');
+        })
 };
 
 exports.getCheckout = (req, res) => {
