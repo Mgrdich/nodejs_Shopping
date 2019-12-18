@@ -44,6 +44,7 @@ exports.getIndex = (req, res) => {
 };
 
 exports.getCart = (req, res) => {
+/*
     Cart.getCart(cart => {
         Product.fetchAll()
             .then(function ([products]) {
@@ -66,6 +67,8 @@ exports.getCart = (req, res) => {
             console.log(err);
         })
     });
+*/
+
 };
 
 exports.postCart = (req, res) => {

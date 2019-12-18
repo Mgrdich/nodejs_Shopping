@@ -23,11 +23,11 @@ module.exports = class Products {
     }
 
     static findById(id) {
-       return  db.execute('select * from products where id=?',[id])
+       return  db.execute('select * from products where id=?',[id]);
     }
 
     static deleteById(id) {
-
+        return db.execute("delete from products where id=?",[id]);
     }
 };
 
