@@ -1,8 +1,6 @@
 const {getAddProduct, postAddProduct, getProducts, getEditProduct, postEditProduct, postDeleteProduct} = require("../controllers/admin");
 const {Router} = require('express');
 
-// const path = require('path');
-// const rootDir = require('../util/path');
 const router = Router();
 
 // /admin/add-product => GET

@@ -6,6 +6,8 @@ const p = path.join(
     'data',
     'cart.json'
 );
+/*remember this is not a user specific*/
+const {db} = require('../util/database');
 
 module.exports = class Cart {
     static addProduct(id, productPrice) {
@@ -61,14 +63,7 @@ module.exports = class Cart {
         });
     }
 
-    static getCart(cb) {
-        fs.readFile(p, (err, fileContent) => {
-            const cart = JSON.parse(fileContent);
-            if (err) {
-                cb(null);
-            } else {
-                cb(cart);
-            }
-        });
+    static getCart() {
+        db.execute("select productID from carts where id=?",[69]); //later on should be specified
     }
 };
