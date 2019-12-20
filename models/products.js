@@ -11,11 +11,15 @@ module.exports = class Products {
         this.price = price;
     }
 
-    save() {
+    edit() {
         return db.execute(
-            'insert into products values(default,?,?,?,?)',
-            [this.title, this.description, this.imageUrl, this.price]
+            'update products set title=? , description=? , imageUrl=?,price=? where  id=?',
+            [this.title, this.description, this.imageUrl, this.price, this.id]
         );
+    }
+    add() {
+        return db.execute('insert into products values(default,?,?,?,?)',
+            [this.title, this.description, this.imageUrl, this.price]);
     }
 
     static fetchAll() {
@@ -23,11 +27,11 @@ module.exports = class Products {
     }
 
     static findById(id) {
-       return  db.execute('select * from products where id=?',[id]);
+        return db.execute('select * from products where id=?', [id]);
     }
 
     static deleteById(id) {
-        return db.execute("delete from products where id=?",[id]);
+        return db.execute("delete from products where id=?", [id]);
     }
 };
 
