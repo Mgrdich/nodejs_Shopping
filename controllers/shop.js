@@ -39,36 +39,21 @@ exports.getIndex = (req, res) => {
                 hasProducts: data.length > 0,
             });
         }).catch(function (err) {
-            console.log(err);
+        console.log(err);
     });
 };
 
 exports.getCart = (req, res) => {
-/*
-    Cart.getCart(cart => {
-        Product.fetchAll()
-            .then(function ([products]) {
-                const cartProducts = [];
-                for (let product of products) {
-                    const cartProductData = cart.products.find(
-                        prod => prod.id === product.id
-                    );
-                    if (cartProductData) {
-                        cartProducts.push({productData: product, qty: cartProductData.qty}); //is created here locally
-                    }
-                }
-                res.render('shop/cart', {
-                    path: '/cart',
-                    pageTitle: 'Your Cart',
-                    products: cartProducts
-                });
-
-            }).catch(function (err) {
-            console.log(err);
-        })
-    });
-*/
-
+    Cart.getCart()
+        .then(function ([data]) {
+            res.render('shop/cart', {
+                path: '/cart',
+                pageTitle: 'Your Cart',
+                products: [data[0]]
+            });
+        }).catch(function (err) {
+        console.log(err);
+    })
 };
 
 exports.postCart = (req, res) => {

@@ -59,6 +59,6 @@ module.exports = class Cart {
     }
 
     static getCart() { //TODO first of all make the fetching works correctly for a non user personal custom
-        db.execute("select productID from carts where id=?",[69]); //later on should be specified
+        return db.execute("select * from carts inner join products p on carts.productID = p.id where userID = ?",[6969]); //later on should be specified
     }
 };
