@@ -1,17 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-const rootDir = require('../util/path');
-const p = path.join(
-    rootDir,
-    'data',
-    'cart.json'
-);
-/*remember this is not a user specific*/
 const {db} = require('../util/database');
 
 module.exports = class Cart {
     static addProduct(id, productPrice) {
         // Fetch the previous cart
+/*
         fs.readFile(p, (err, fileContent) => {
             let cart = { products: [], totalPrice: 0 };
             if (!err) {
@@ -38,9 +30,11 @@ module.exports = class Cart {
                 console.log(err);
             });
         });
+*/
     }
 
-    static deleteProduct(id, productPrice) {
+    static deleteProduct(id, productPrice) { //TODO this means from the cart i think
+/*
         fs.readFile(p, (err, fileContent) => {
             if (err) {
                 return;
@@ -61,9 +55,10 @@ module.exports = class Cart {
                 console.log(err);
             });
         });
+*/
     }
 
-    static getCart() {
+    static getCart() { //TODO first of all make the fetching works correctly for a non user personal custom
         db.execute("select productID from carts where id=?",[69]); //later on should be specified
     }
 };
