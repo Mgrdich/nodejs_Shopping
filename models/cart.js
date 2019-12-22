@@ -1,64 +1,24 @@
 const {db} = require('../util/database');
 
 module.exports = class Cart {
-    static addProduct(id, productPrice) {
-        // Fetch the previous cart
-/*
-        fs.readFile(p, (err, fileContent) => {
-            let cart = { products: [], totalPrice: 0 };
-            if (!err) {
-                cart = JSON.parse(fileContent);
-            }
-            // Analyze the cart => Find existing product
-            const existingProductIndex = cart.products.findIndex(
-                prod => prod.id === id
-            );
-            const existingProduct = cart.products[existingProductIndex];
-            let updatedProduct;
-            // Add new product/ increase quantity
-            if (existingProduct) {
-                updatedProduct = { ...existingProduct };
-                updatedProduct.qty = updatedProduct.qty + 1;
-                cart.products = [...cart.products];
-                cart.products[existingProductIndex] = updatedProduct;
-            } else {
-                updatedProduct = { id: id, qty: 1 };
-                cart.products = [...cart.products, updatedProduct];
-            }
-            cart.totalPrice = cart.totalPrice + +productPrice;
-            fs.writeFile(p, JSON.stringify(cart), err => {
-                console.log(err);
-            });
-        });
-*/
+    static addProduct(prodID, qty) { //TODO add a user to it
+        if (!qty) { //when the is not in the cart
+            console.log("qty");
+            return db.execute("insert into carts values (default,?,?,?)", [6969, 1, prodID]);
+        }
+        let quantity = qty + 1;
+        return db.execute("update carts set quantity=? where userID=? and id=?", [quantity, 6969])
     }
 
-    static deleteProduct(id, productPrice) { //TODO this means from the cart i think
-/*
-        fs.readFile(p, (err, fileContent) => {
-            if (err) {
-                return;
-            }
-            const updatedCart = {...JSON.parse(fileContent)};
-            const product = updatedCart.products.find(prod => prod.id === id);
-            if (!product) {
-                return;
-            }
-            const productQty = product.qty;
-            updatedCart.products = updatedCart.products.filter(
-                prod => prod.id !== id
-            );
-            updatedCart.totalPrice =
-                updatedCart.totalPrice - productPrice * productQty;
-
-            fs.writeFile(p, JSON.stringify(updatedCart), err => {
-                console.log(err);
-            });
-        });
-*/
+    static findProductQuantity(productId) { //TODO add a user to it
+        return db.execute("select quantity from carts where userID=? and productID=?", [6969, productId])
     }
 
-    static getCart() { //TODO first of all make the fetching works correctly for a non user personal custom
-        return db.execute("select * from carts inner join products p on carts.productID = p.id where userID = ?",[6969]); //later on should be specified
+    static deleteProduct(id) {
+        return db.execute("delete from carts where productID=?", [id])
+    }
+
+    static getCart() {
+        return db.execute("select * from carts inner join products p on carts.productID = p.id where userID = ?", [6969]); //later on should be specified
     }
 };
