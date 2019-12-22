@@ -1,69 +1,23 @@
-const fs = require('fs');
-const path = require('path');
-const rootDir = require('../util/path');
-const p = path.join(
-    rootDir,
-    'data',
-    'cart.json'
-);
-/*remember this is not a user specific*/
 const {db} = require('../util/database');
 
 module.exports = class Cart {
-    static addProduct(id, productPrice) {
-        // Fetch the previous cart
-        fs.readFile(p, (err, fileContent) => {
-            let cart = { products: [], totalPrice: 0 };
-            if (!err) {
-                cart = JSON.parse(fileContent);
-            }
-            // Analyze the cart => Find existing product
-            const existingProductIndex = cart.products.findIndex(
-                prod => prod.id === id
-            );
-            const existingProduct = cart.products[existingProductIndex];
-            let updatedProduct;
-            // Add new product/ increase quantity
-            if (existingProduct) {
-                updatedProduct = { ...existingProduct };
-                updatedProduct.qty = updatedProduct.qty + 1;
-                cart.products = [...cart.products];
-                cart.products[existingProductIndex] = updatedProduct;
-            } else {
-                updatedProduct = { id: id, qty: 1 };
-                cart.products = [...cart.products, updatedProduct];
-            }
-            cart.totalPrice = cart.totalPrice + +productPrice;
-            fs.writeFile(p, JSON.stringify(cart), err => {
-                console.log(err);
-            });
-        });
+    static addProduct(prodID, qty) { //TODO add a user to it
+        if (!qty) { //when the is not in the cart
+            return db.execute("insert into carts values (default,?,?,?)", [6969, 1, prodID]);
+        }
+        let quantity = qty + 1;
+        return db.execute("update carts set quantity=? where userID=? and productID=?", [quantity, 6969,prodID])
     }
 
-    static deleteProduct(id, productPrice) {
-        fs.readFile(p, (err, fileContent) => {
-            if (err) {
-                return;
-            }
-            const updatedCart = {...JSON.parse(fileContent)};
-            const product = updatedCart.products.find(prod => prod.id === id);
-            if (!product) {
-                return;
-            }
-            const productQty = product.qty;
-            updatedCart.products = updatedCart.products.filter(
-                prod => prod.id !== id
-            );
-            updatedCart.totalPrice =
-                updatedCart.totalPrice - productPrice * productQty;
-
-            fs.writeFile(p, JSON.stringify(updatedCart), err => {
-                console.log(err);
-            });
-        });
+    static findProductQuantity(productId) { //TODO add a user to it
+        return db.execute("select quantity from carts where userID=? and productID=?", [6969, productId])
     }
 
-    static getCart() {
-        db.execute("select productID from carts where id=?",[69]); //later on should be specified
+    static deleteProduct(id) {
+        return db.execute("delete from carts where productID=?", [id])
+    }
+
+    static getCart() { //not here
+        return db.execute("select *,carts.id as cartID from carts inner join products p on carts.productID = p.id where userID = ?", [6969]); //later on should be specified
     }
 };

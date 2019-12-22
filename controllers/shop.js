@@ -39,56 +39,48 @@ exports.getIndex = (req, res) => {
                 hasProducts: data.length > 0,
             });
         }).catch(function (err) {
-            console.log(err);
+        console.log(err);
     });
 };
 
 exports.getCart = (req, res) => {
-/*
-    Cart.getCart(cart => {
-        Product.fetchAll()
-            .then(function ([products]) {
-                const cartProducts = [];
-                for (let product of products) {
-                    const cartProductData = cart.products.find(
-                        prod => prod.id === product.id
-                    );
-                    if (cartProductData) {
-                        cartProducts.push({productData: product, qty: cartProductData.qty}); //is created here locally
-                    }
-                }
-                res.render('shop/cart', {
-                    path: '/cart',
-                    pageTitle: 'Your Cart',
-                    products: cartProducts
-                });
-
-            }).catch(function (err) {
-            console.log(err);
-        })
-    });
-*/
-
+    Cart.getCart()
+        .then(function ([data]) {
+            console.log(data);
+            res.render('shop/cart', {
+                path: '/cart',
+                pageTitle: 'Your Cart',
+                products: data.length ? data : []
+            });
+        }).catch(function (err) {
+        console.log(err);
+    })
 };
 
 exports.postCart = (req, res) => {
     const prodId = req.body.productId;
-    Product.findById(prodId)
-        .then(function ([product]) {
-            Cart.addProduct(prodId, product[0].price);
-            res.redirect('/cart');
-        });
-
+    Cart.findProductQuantity(prodId)
+        .then(function ([data]) {
+            let quantity = (data[0] && data[0].quantity) ? data[0].quantity : 0;
+            return Cart.addProduct(prodId, quantity)
+        })
+        .then(function () {
+            res.redirect('/cart'); //to update the page
+        }).catch(function (error) {
+        console.log(error);
+    })
 };
 
 exports.postCartDeleteProduct = (req, res) => {
     const prodId = req.body.productId;
-    Product.findById(prodId)
-        .then(function ([product]) {
-            Cart.deleteProduct(prodId, product.price);
-            res.redirect('/cart');
-        })
+    Cart.deleteProduct(prodId).then(function () {
+        res.redirect('/cart');
+    }).catch(function (err) {
+        console.log(err);
+    })
 };
+
+//TODO implement decrement and increment method inside the cart
 
 exports.getCheckout = (req, res) => {
     res.render('shop/checkout', {
