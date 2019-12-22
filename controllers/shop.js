@@ -46,11 +46,11 @@ exports.getIndex = (req, res) => {
 exports.getCart = (req, res) => {
     Cart.getCart()
         .then(function ([data]) {
-            console.log(data[0]);
+            console.log(data);
             res.render('shop/cart', {
                 path: '/cart',
                 pageTitle: 'Your Cart',
-                products: data[0] ? [data[0]] : []
+                products: data.length ? data : []
             });
         }).catch(function (err) {
         console.log(err);
@@ -61,16 +61,14 @@ exports.postCart = (req, res) => {
     const prodId = req.body.productId;
     Cart.findProductQuantity(prodId)
         .then(function ([data]) {
-
             let quantity = (data[0] && data[0].quantity) ? data[0].quantity : 0;
             return Cart.addProduct(prodId, quantity)
         })
-        .then(function (resp) {
+        .then(function () {
             res.redirect('/cart'); //to update the page
         }).catch(function (error) {
         console.log(error);
     })
-
 };
 
 exports.postCartDeleteProduct = (req, res) => {
