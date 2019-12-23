@@ -13,13 +13,14 @@ module.exports = class Products {
 
     edit() {
         return db.execute(
-            'update products set title=? , description=? , imageUrl=?,price=? where  id=?',
-            [this.title, this.description, this.imageUrl, this.price, this.id]
+            'update products set title=? , description=? , imageUrl=?,price=? where  id=? and user=?',
+            [this.title, this.description, this.imageUrl, this.price, this.id, 6969]
         );
     }
+
     add() {
-        return db.execute('insert into products values(default,?,?,?,?)',
-            [this.title, this.description, this.imageUrl, this.price]);
+        return db.execute('insert into products values(default,?,?,?,?,?)',
+            [this.title, this.description, this.imageUrl, this.price, 6969]);
     }
 
     static fetchAll() {
@@ -31,7 +32,7 @@ module.exports = class Products {
     }
 
     static deleteById(id) {
-        return db.execute("delete from products where id=?", [id]);
+        return db.execute("delete from products where id=? and user=?", [id, 6969]);
     }
 };
 

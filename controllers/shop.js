@@ -46,7 +46,6 @@ exports.getIndex = (req, res) => {
 exports.getCart = (req, res) => {
     Cart.getCart()
         .then(function ([data]) {
-            console.log(data);
             res.render('shop/cart', {
                 path: '/cart',
                 pageTitle: 'Your Cart',
