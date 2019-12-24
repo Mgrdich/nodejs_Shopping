@@ -1,10 +1,14 @@
-const mysql = require('mysql2');
+let MongoClient = require('mongodb').MongoClient;
 
-const pool = mysql.createPool({
-    host:'localhost',
-    user:'root',
-    password:'root',
-    database:'nodejs_Shop'
-});
 
-exports.db = pool.promise();
+const mongoConnect = callback => {
+    MongoClient.connect('mongodb://localhost:27017/test',{ useUnifiedTopology: true }).then((r) => {
+        callback(r);
+    }).catch(function (err) {
+        console.log(err);
+    })
+};
+
+module.exports = mongoConnect;
+
+
