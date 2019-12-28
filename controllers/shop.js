@@ -3,12 +3,12 @@ const Cart = require("../models/cart");
 
 exports.getProducts = (req, res) => {
     Product.fetchAll()
-        .then(function ([data]) {
+        .then(function (products) {
             res.render('shop/product-list', {
-                prods: data,
+                prods: products,
                 pageTitle: 'All Products',
                 path: '/products',
-                hasProducts: data.length > 0,
+                hasProducts: products.length > 0,
             });
         }).catch(function (err) {
         console.log(err);
@@ -17,11 +17,13 @@ exports.getProducts = (req, res) => {
 
 exports.getProduct = (req, res) => {
     const prodId = req.params.productId;
+
     Product.findById(prodId)
-        .then(function ([product]) {
+        .then(function (product) {
+            console.log(product);
             res.render('shop/product-detail', {
-                product: product[0],
-                pageTitle: product[0].title,
+                product: product,
+                pageTitle: product.title,
                 path: `/products`,
             });
         }).catch(function (err) {
@@ -31,12 +33,12 @@ exports.getProduct = (req, res) => {
 
 exports.getIndex = (req, res) => {
     Product.fetchAll()
-        .then(function ([data]) {
+        .then(function (products) {
             res.render('shop/index', {
-                prods: data,
+                prods: products,
                 pageTitle: 'Shop',
                 path: '/',
-                hasProducts: data.length > 0,
+                hasProducts: products.length > 0,
             });
         }).catch(function (err) {
         console.log(err);

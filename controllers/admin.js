@@ -9,12 +9,12 @@ exports.getAddProduct = (req, res) => {
 };
 
 exports.postAddProduct = (req, res) => {
-    const prodId = req.body.productId;
+    // const prodId = req.body.productId;
     const title = req.body.title;
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
     const description = req.body.description;
-    const product = new Product(prodId, title, imageUrl, description, price);
+    const product = new Product(title, imageUrl, description, price);
     product.add()
         .then(function () {
             res.redirect('/');
@@ -31,15 +31,15 @@ exports.getEditProduct = (req, res) => {
     }
     const prodId = req.params.productId;
     Product.findById(prodId)
-        .then(function ([data]) {
-            if (!data[0]) {
+        .then(function (product) {
+            if (!product) {
                 res.redirect('/');
             }
             res.render('admin/edit-product', {
                 pageTitle: 'Edit Product',
                 path: '/admin/edit-product',
                 editing: editMode,
-                product: data[0]
+                product: product
             });
         })
 };

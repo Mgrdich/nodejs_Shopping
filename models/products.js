@@ -2,9 +2,10 @@ const Cart = require('./cart');
 
 const {getDb} = require('../util/database');
 
+const mongodb = require('mongodb');
+
 module.exports = class Products {
-    constructor(id, title, imageUrl, description, price) {
-        this.id = id;
+    constructor(title, imageUrl, description, price) {
         this.title = title;
         this.imageUrl = imageUrl;
         this.description = description;
@@ -24,19 +25,32 @@ module.exports = class Products {
             const db = getDb();
             return db.collection('products').insertOne(this)
                 .then(function (result) {
-                    console.log(result);
+                     console.log(result);
             }).catch(function (err) {
                 console.log(err);
             })
     }
 
     static fetchAll() {
-/*
-        return db.execute("select * from products");
-*/
+        const db = getDb();
+        return db.collection('products').find().toArray()
+            .then(function (products) {
+                return products;
+            }).catch(function (err) {
+                console.log(err);
+            })
     }
 
     static findById(id) {
+        const db = getDb();
+        return db.collection('products').find({_id:new mongodb.ObjectId(id)})
+            .next()
+            .then(function (product) {
+                return product;
+            }).catch(function (err) {
+                console.log(err);
+        });
+
 /*
         return db.execute('select * from products where id=?', [id]);
 */
