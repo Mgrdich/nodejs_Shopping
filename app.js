@@ -10,13 +10,20 @@ app.set('views', 'views');
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
+const {User} = require("./models/user");
 
 app.use(bodyParser.urlencoded({
     extended: false
 }));
 
 app.use((req, res, next) => {
-    next();
+    User.findById("5e08beba493b7244aa1a8cf8")
+        .then(function (user) {
+            req.user = user; //storing it as a request
+            next();
+        }).catch(function (err) {
+        console.log(err);
+    });
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
