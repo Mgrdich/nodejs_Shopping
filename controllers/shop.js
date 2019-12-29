@@ -47,11 +47,11 @@ exports.getIndex = (req, res) => {
 
 exports.getCart = (req, res) => {
     Cart.getCart()
-        .then(function ([data]) {
+        .then(function (products) {
             res.render('shop/cart', {
                 path: '/cart',
                 pageTitle: 'Your Cart',
-                products: data.length ? data : []
+                products: products.length ? products : []
             });
         }).catch(function (err) {
         console.log(err);
@@ -60,23 +60,20 @@ exports.getCart = (req, res) => {
 
 exports.postCart = (req, res) => {
     const prodId = req.body.productId;
-    Cart.findProductQuantity(prodId)
-        .then(function ([data]) {
-            let quantity = (data[0] && data[0].quantity) ? data[0].quantity : 0;
-            return Cart.addProduct(prodId, quantity)
-        })
-        .then(function () {
-            res.redirect('/cart'); //to update the page
-        }).catch(function (error) {
-        console.log(error);
+    Product.findById(prodId)
+        .then(function (product) {
+            return req.user.addToCart(product);//Wow
+        }).catch(function (err) {
+        console.log(err);
     })
 };
 
 exports.postCartDeleteProduct = (req, res) => {
     const prodId = req.body.productId;
-    Cart.deleteProduct(prodId).then(function () {
-        res.redirect('/cart');
-    }).catch(function (err) {
+    Cart.deleteProduct(prodId)
+        .then(function () {
+            res.redirect('/cart');
+        }).catch(function (err) {
         console.log(err);
     })
 };
