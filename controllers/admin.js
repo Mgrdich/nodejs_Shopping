@@ -1,4 +1,5 @@
 const Product = require("../models/products");
+const {mObjectId} = require('../util/utility');
 
 exports.getAddProduct = (req, res) => {
     res.render('admin/edit-product', {
@@ -15,7 +16,7 @@ exports.postAddProduct = (req, res) => {
     const price = req.body.price;
     const description = req.body.description;
     const product = new Product(title, imageUrl, description, price);
-    product.add()
+    product.save()
         .then(function () {
             res.redirect('/');
         }).catch(function (err) {
@@ -32,7 +33,7 @@ exports.getEditProduct = (req, res) => {
     const prodId = req.params.productId;
     Product.findById(prodId)
         .then(function (product) {
-            if (!product) {
+            if (!product) { //in the case of a single product
                 res.redirect('/');
             }
             res.render('admin/edit-product', {
@@ -51,13 +52,13 @@ exports.postEditProduct = (req, res, next) => {
     const updatedImageUrl = req.body.imageUrl;
     const updatedDesc = req.body.description;
     const updatedProduct = new Product(
-        prodId,
         updatedTitle,
         updatedImageUrl,
         updatedDesc,
-        updatedPrice
+        updatedPrice,
+        prodId
     );
-    updatedProduct.edit()
+    updatedProduct.save()
         .then(function () {
             res.redirect('/admin/products');
         }).catch(function (err) {
@@ -68,12 +69,12 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.getProducts = (req, res) => {
     Product.fetchAll()
-        .then(function ([data]) {
+        .then(function (products) {
             res.render('admin/products', {
-                prods: data,
+                prods: products,
                 pageTitle: 'Admin Products',
                 path: '/admin/products',
-                hasProducts: data.length > 0,
+                hasProducts: products.length > 0,
                 activeShop: true,
                 productCSS: true
             });

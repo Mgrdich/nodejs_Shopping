@@ -2,33 +2,32 @@ const Cart = require('./cart');
 
 const {getDb} = require('../util/database');
 
-const mongodb = require('mongodb');
+const {mObjectId} = require("../util/utility");
+
 
 module.exports = class Products {
-    constructor(title, imageUrl, description, price) {
+    constructor(title, imageUrl, description, price, id) {
         this.title = title;
         this.imageUrl = imageUrl;
         this.description = description;
         this.price = price;
+        this._id = new mObjectId(id);
     }
 
-    edit() {
-/*
-        return db.execute(
-            'update products set title=? , description=? , imageUrl=?,price=? where  id=? and user=?',
-            [this.title, this.description, this.imageUrl, this.price, this.id, 6969]
-        );
-*/
-    }
-
-    add() { //this is returning the whole chain
-            const db = getDb();
-            return db.collection('products').insertOne(this)
-                .then(function (result) {
-                     console.log(result);
-            }).catch(function (err) {
-                console.log(err);
-            })
+    save() { //edit and create mixed
+        console.log("this",this);
+        const db = getDb();
+        let Dbpro;
+        if (!this._id) {
+            Dbpro = db.collection('products').updateOne({_id: this._id}, {$set: this});
+        } else {
+            Dbpro = db.collection('products').insertOne(this);
+        }
+        return Dbpro.then(function (result) {
+            console.log();
+        }).catch(function (err) {
+            console.log(err);
+        })
     }
 
     static fetchAll() {
@@ -43,23 +42,21 @@ module.exports = class Products {
 
     static findById(id) {
         const db = getDb();
-        return db.collection('products').find({_id:new mongodb.ObjectId(id)})
+        return db.collection('products').find({_id: new mObjectId(id)})
             .next()
             .then(function (product) {
                 return product;
             }).catch(function (err) {
                 console.log(err);
-        });
-
-/*
-        return db.execute('select * from products where id=?', [id]);
-*/
+            });
     }
 
     static deleteById(id) {
-/*
-        return db.execute("delete from products where id=? and user=?", [id, 6969]);
-*/
+        const db = getDb();
+        return db.collection('products').deleteOne({_id: new mObjectId(id)})
+            .catch(function (err) {
+                console.log(err);
+            })
     }
 };
 
