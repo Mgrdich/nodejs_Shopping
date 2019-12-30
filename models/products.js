@@ -1,6 +1,4 @@
-const Cart = require('./cart');
-
-const {getDb} = require('../util/database');
+ const {getDb} = require('../util/database');
 
 const {mObjectId} = require("../util/utility");
 

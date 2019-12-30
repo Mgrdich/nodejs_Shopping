@@ -1,5 +1,4 @@
 const Product = require("../models/products");
-const {mObjectId} = require('../util/utility');
 
 exports.getAddProduct = (req, res) => {
     res.render('admin/edit-product', {
