@@ -26,12 +26,12 @@ class User {
     }
 
     /*-----------Cart functionality inside the User-----------*/
+
     getCart() {
         const db = getDb();
         const productIds = this.cart.items.map(i => i.productId);
         return db.collection('products').find({_id: {$in: productIds}}).toArray()
             .then((products) => {
-                console.log("products:",products);
                 return products.map(p => {
                     return {
                         ...p,
@@ -65,16 +65,50 @@ class User {
 
     deleteItemFromCart(productId) {
         const updatedCartItems = this.cart.items.filter(function (cp) {
-            return cp.productId.toString() !== productId.toString() ;
+            return cp.productId.toString() !== productId.toString();
         });
 
         const db = getDb();
         return db
             .collection('users')
             .updateOne(
-                {_id:new mObjectId(this._id)},
-                {$set:{cart:{items:updatedCartItems}}}
+                {_id: new mObjectId(this._id)},
+                {$set: {cart: {items: updatedCartItems}}}
             );
+    }
+
+    /*-----------Orders functionality-----------*/
+
+    addOrder() {
+        const db = getDb();
+        return this.getCart()
+            .then(products => {
+                const order = {
+                    items: products,
+                    user: {
+                        _id: this._id,
+                        name: this.name
+                    }
+                };
+                return db.collection('orders').insertOne(order);
+            })
+            .then(result => {
+                this.cart = {items: []};
+                return db
+                    .collection('users')
+                    .updateOne(
+                        {_id: this._id},
+                        {$set: {cart: {items: []}}}
+                    );
+            });
+    }
+
+    getOrders() {
+        const db = getDb();
+        return db
+            .collection('orders')
+            .find({'user._id':this._id})
+            .toArray();
     }
 
 }

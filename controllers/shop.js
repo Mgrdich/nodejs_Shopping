@@ -90,8 +90,22 @@ exports.getCheckout = (req, res) => {
 };
 
 exports.getOrders = (req, res) => {
-    res.render('shop/orders', {
-        path: '/orders',
-        pageTitle: 'Orders',
-    })
+    req.user.getOrders()
+        .then(function (orders) {
+            res.render('shop/orders', {
+                path: '/orders',
+                pageTitle: 'Orders',
+                orders: orders ? orders : []
+            })
+        });
+};
+
+exports.postOrder = (req, res) => {
+    req.user
+        .addOrder()
+        .then(() => {
+            res.redirect('/orders');
+        }).catch(function (err) {
+        console.log(err)
+    });
 };
