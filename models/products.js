@@ -1,10 +1,10 @@
- const {getDb} = require('../util/database');
+const {getDb} = require('../util/database');
 
 const {mObjectId} = require("../util/utility");
 
 
 module.exports = class Products {
-    constructor(title, imageUrl, description, price, id,userId) {
+    constructor(title, imageUrl, description, price, id, userId) {
         this.title = title;
         this.imageUrl = imageUrl;
         this.description = description;
@@ -51,10 +51,12 @@ module.exports = class Products {
 
     static deleteById(id) {
         const db = getDb();
-        return db.collection('products').deleteOne({_id: new mObjectId(id)})
-            .catch(function (err) {
-                console.log(err);
-            })
+        return db.collection('products').deleteOne({_id: new mObjectId(id)}).then(function () {
+            //then check out whether this product was located in the cart for all the users
+            
+        }).catch(function (err) {
+            console.log(err);
+        })
     }
 };
 

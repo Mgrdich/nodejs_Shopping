@@ -92,7 +92,7 @@ class User {
                 };
                 return db.collection('orders').insertOne(order);
             })
-            .then(result => {
+            .then(() => {
                 this.cart = {items: []};
                 return db
                     .collection('users')

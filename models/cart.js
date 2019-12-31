@@ -2,7 +2,7 @@
 const {db} = require('../util/database');
 
 module.exports = class Cart {
-    static addProduct(prodID, qty) { //TODO add a user to it
+    static addProduct(prodID, qty) {
 /!*
         if (!qty) { //when the is not in the cart
             // return db.execute("insert into carts values (default,?,?,?)", [6969, 1, prodID]);
@@ -12,7 +12,7 @@ module.exports = class Cart {
 *!/
     }
 
-    static findProductQuantity(productId) { //TODO add a user to it
+    static findProductQuantity(productId) {
         // return db.execute("select quantity from carts where userID=? and productID=?", [6969, productId])
     }
 
