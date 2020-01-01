@@ -16,19 +16,17 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 
-/*
 app.use((req, res, next) => {
 
-    User.findById("5e08beba493b7244aa1a8cf8")
+    User.findById("5e0cba048ac37ef54cfa7f57")
         .then(function (user) {
-            req.user = new User(user.name, user.email, user.cart, user._id); //storing it as a request
+            req.user = user; //storing it as a request
             next();
         }).catch(function (err) {
         console.log(err);
     });
 
 });
-*/
 
 app.use(express.static(path.join(__dirname, 'public')));
 
