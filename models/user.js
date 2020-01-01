@@ -1,5 +1,6 @@
+/*
 const {mObjectId} = require("../util/utility");
-const {getDb} = require('../util/database');
+// const {getDb} = require('../util/database');
 
 class User {
 
@@ -25,7 +26,7 @@ class User {
             });
     }
 
-    /*-----------Cart functionality inside the User-----------*/
+    /!*-----------Cart functionality inside the User-----------*!/
 
     getCart() {
         const db = getDb();
@@ -77,7 +78,7 @@ class User {
             );
     }
 
-    /*-----------Orders functionality-----------*/
+    /!*-----------Orders functionality-----------*!/
 
     addOrder() {
         const db = getDb();
@@ -113,4 +114,4 @@ class User {
 
 }
 
-exports.User = User;
+exports.User = User;*/
