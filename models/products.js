@@ -49,9 +49,9 @@ module.exports = class Products {
             });
     }
 
-    static deleteById(id) {
+    static deleteById(id,userId) {
         const db = getDb();
-        return db.collection('products').deleteOne({_id: new mObjectId(id)}).then(function () {
+        return db.collection('products').deleteOne({_id: new mObjectId(id)}).then(function (result) {
             //then check out whether this product was located in the cart for all the users
             
         }).catch(function (err) {

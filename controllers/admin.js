@@ -83,7 +83,7 @@ exports.getProducts = (req, res) => {
 };
 
 exports.postDeleteProduct = (req, res) => {
-    Product.deleteById(req.body.id)
+    Product.deleteById(req.body.id,req.body.userId)
         .then(function () {
             res.redirect('/products');
         }).catch(function (err) {
