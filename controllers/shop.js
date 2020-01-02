@@ -1,7 +1,8 @@
-const Product = require("../models/products");
+const {Product} = require("../models/products");
+const {Order} = require("../models/orders");
 
 exports.getProducts = (req, res) => {
-    Product.fetchAll()
+    Product.find()
         .then(function (products) {
             res.render('shop/product-list', {
                 prods: products,
@@ -31,7 +32,7 @@ exports.getProduct = (req, res) => {
 };
 
 exports.getIndex = (req, res) => {
-    Product.fetchAll()
+    Product.find()
         .then(function (products) {
             res.render('shop/index', {
                 prods: products,
@@ -45,8 +46,11 @@ exports.getIndex = (req, res) => {
 };
 
 exports.getCart = (req, res) => {
-    req.user.getCart()
-        .then(function (products) {
+    req.user
+        .populate('cart.items.productId')
+        .execPopulate()
+        .then(function (user) {
+            const products = user.cart.items;
             res.render('shop/cart', {
                 path: '/cart',
                 pageTitle: 'Your Cart',
@@ -63,7 +67,7 @@ exports.postCart = (req, res) => {
         .then(function (product) {
             return req.user.addToCart(product); //Wow;
         }).then(function () {
-        res.redirect('/cart');
+        res.redirect('/');
     }).catch(function (err) {
         console.log(err);
     })
@@ -71,7 +75,7 @@ exports.postCart = (req, res) => {
 
 exports.postCartDeleteProduct = (req, res) => {
     const prodId = req.body.productId;
-    req.user.deleteItemFromCart(prodId)
+    req.user.removeFromCart(prodId)
         .then(function () {
             res.redirect('/cart');
         }).catch(function (err) {
@@ -89,8 +93,9 @@ exports.getCheckout = (req, res) => {
 };
 
 exports.getOrders = (req, res) => {
-    req.user.getOrders()
+    Order.find({ 'user.userId': req.user._id })
         .then(function (orders) {
+            console.log(orders);
             res.render('shop/orders', {
                 path: '/orders',
                 pageTitle: 'Orders',
@@ -99,12 +104,24 @@ exports.getOrders = (req, res) => {
         });
 };
 
-exports.postOrder = (req, res) => {
+exports.postOrder = (req, res) => { //TODO add a backup of cart that will never be deleted
     req.user
-        .addOrder()
-        .then(() => {
-            res.redirect('/orders');
-        }).catch(function (err) {
-        console.log(err)
+        .populate('cart.items.productId')
+        .execPopulate()
+        .then(function (user) {
+            const products = user.cart.items.map(i => ({quantity: i.quantity, product: { ...i.productId._doc }}));  //accessing what is i like populate
+            const order = new Order({
+                user: {
+                    name: req.user.name,
+                    userId: req.user //mongoose does the rest
+                },
+                products: products
+            });
+            return order.save();
+        }).then(function () {
+        res.redirect('/orders');
+        req.user.clearCart();
+    }).catch(function (err) {
+        console.log(err);
     });
 };

@@ -1,4 +1,4 @@
-const Product = require("../models/products");
+const {Product} = require("../models/products");
 
 exports.getAddProduct = (req, res) => {
     res.render('admin/edit-product', {
@@ -9,12 +9,17 @@ exports.getAddProduct = (req, res) => {
 };
 
 exports.postAddProduct = (req, res) => {
-    // const prodId = req.body.productId;
     const title = req.body.title;
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
     const description = req.body.description;
-    const product = new Product(title, imageUrl, description, price, null, req.user._id);
+    const product = new Product({
+        title:title,
+        price:price,
+        description:description,
+        imageUrl: imageUrl,
+        userId: req.user //it will pick the id for you mongoose
+    });
     product.save()
         .then(function () {
             res.redirect('/');
@@ -44,30 +49,27 @@ exports.getEditProduct = (req, res) => {
         })
 };
 
-exports.postEditProduct = (req, res, next) => {
-    const prodId = req.body.productId;
+exports.postEditProduct = (req, res) => {
     const updatedTitle = req.body.title;
     const updatedPrice = req.body.price;
     const updatedImageUrl = req.body.imageUrl;
     const updatedDesc = req.body.description;
-    const updatedProduct = new Product(
-        updatedTitle,
-        updatedImageUrl,
-        updatedDesc,
-        updatedPrice,
-        prodId
-    );
-    updatedProduct.save()
-        .then(function () {
-            res.redirect('/admin/products');
-        }).catch(function (err) {
+    const prodId = req.body.productId;
+    Product.findById(prodId).then(function (product) {
+        product.title = updatedTitle;
+        product.price = updatedPrice;
+        product.imageUrl = updatedImageUrl;
+        product.description = updatedDesc;
+        return product.save();
+    }).then(function () {
+        res.redirect('/admin/products')
+    }).catch(function (err) {
         console.log(err);
-    })
-
+    });
 };
 
 exports.getProducts = (req, res) => {
-    Product.fetchAll()
+    Product.find()
         .then(function (products) {
             res.render('admin/products', {
                 prods: products,
@@ -83,7 +85,7 @@ exports.getProducts = (req, res) => {
 };
 
 exports.postDeleteProduct = (req, res) => {
-    Product.deleteById(req.body.id,req.body.userId)
+    Product.findByIdAndRemove(req.body.id)
         .then(function () {
             res.redirect('/products');
         }).catch(function (err) {
