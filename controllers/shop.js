@@ -104,7 +104,7 @@ exports.getOrders = (req, res) => {
         });
 };
 
-exports.postOrder = (req, res) => { //TODO add a backup of cart that will never be deleted 
+exports.postOrder = (req, res) => { //TODO add a backup of cart that will never be deleted
     req.user
         .populate('cart.items.productId')
         .execPopulate()
