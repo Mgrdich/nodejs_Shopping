@@ -9,7 +9,6 @@ exports.getAddProduct = (req, res) => {
 };
 
 exports.postAddProduct = (req, res) => {
-    // const prodId = req.body.productId;
     const title = req.body.title;
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
@@ -18,7 +17,8 @@ exports.postAddProduct = (req, res) => {
         title:title,
         price:price,
         description:description,
-        imageUrl: imageUrl
+        imageUrl: imageUrl,
+        userId: req.user //it will pick the id for you mongoose
     });
     product.save()
         .then(function () {
@@ -49,7 +49,7 @@ exports.getEditProduct = (req, res) => {
         })
 };
 
-exports.postEditProduct = (req, res, next) => {
+exports.postEditProduct = (req, res) => {
     const updatedTitle = req.body.title;
     const updatedPrice = req.body.price;
     const updatedImageUrl = req.body.imageUrl;

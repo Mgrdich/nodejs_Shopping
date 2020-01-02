@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    title: {
+    name: {
         type: String,
         required: true
     },
@@ -13,10 +13,44 @@ const userSchema = new Schema({
     },
     cart: {
         items: [{
-            productId: {type: Schema.Types.ObjectId, required: true},
+            productId: {type: Schema.Types.ObjectId, ref:'Product',required: true},
             quantity: {type: Number, required: true}
         }]
     }
 });
 
-exports.Product = mongoose.model('User', userSchema);
+userSchema.methods.addToCart = function(product) {
+    const cartProductIndex = this.cart.items.findIndex(cp => {
+        return cp.productId.toString() === product._id.toString();
+    });
+    let newQuantity = 1;
+    const updatedCartItems = [...this.cart.items];
+
+    if (cartProductIndex >= 0) {
+        newQuantity = this.cart.items[cartProductIndex].quantity + 1;
+        updatedCartItems[cartProductIndex].quantity = newQuantity;
+    } else {
+        updatedCartItems.push({
+            productId: product._id,
+            quantity: newQuantity //which mostly 1
+        });
+    }
+    this.cart = {
+        items: updatedCartItems
+    };
+    return this.save(); //the schema save
+};
+
+userSchema.methods.removeFromCart = function(productId) {
+    this.cart.items = this.cart.items.filter(item => {
+        return item.productId.toString() !== productId.toString();
+    });
+    return this.save();
+};
+
+userSchema.methods.clearCart = function() {
+    this.cart = { items: [] };
+    return this.save();
+};
+
+exports.User = mongoose.model('User', userSchema);
