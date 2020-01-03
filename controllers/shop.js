@@ -127,11 +127,12 @@ exports.postOrder = (req, res) => {
 };
 
 exports.postIncDec = (req, res) => {
-    const qtyAdd = req.body.quantityValue;
+    const qtyAdd = +req.body.quantityValue; //converting it to number
+    console.log(typeof qtyAdd);
     const prodId = req.body.productId;
     req.user.addProdQty(prodId, qtyAdd)
         .then(function () {
-            res.redirect('/');
+            res.redirect('/cart');
         }).catch(function (err) {
         console.log(err);
     })

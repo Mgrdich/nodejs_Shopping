@@ -61,7 +61,7 @@ userSchema.methods.removeFromCart = function (productId) {
 userSchema.methods.addProdQty = function (productId, qtyAdd) {
 
     let prodIndex = this.cart.items.findIndex(item => {
-        return item.productId.toString() !== productId.toString();
+        return item.productId.toString() === productId.toString();
     });
 
     if (prodIndex < 0) {
@@ -69,14 +69,15 @@ userSchema.methods.addProdQty = function (productId, qtyAdd) {
     }
     this.cart.items[prodIndex].quantity += qtyAdd;
 
-/*
     let promiseCartStat = CartStat.findOne({userId: this._id}).then((cartStat) => { //the promise of the addStat to chart
         //since it should be there to make this work
-        return cartStat.addQtyStatCart(productId, qtyAdd);
+        if (qtyAdd > 0) {
+            return cartStat.addQtyStatCart(productId, qtyAdd);
+        }
+        return Promise.resolve();
     });
-*/
 
-    return Promise.all([this.save()/*, promiseCartStat*/]);
+    return Promise.all([this.save(), promiseCartStat]);
 
 };
 
