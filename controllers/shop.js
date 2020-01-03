@@ -93,7 +93,7 @@ exports.getCheckout = (req, res) => {
 };
 
 exports.getOrders = (req, res) => {
-    Order.find({ 'user.userId': req.user._id })
+    Order.find({'user.userId': req.user._id})
         .then(function (orders) {
             console.log(orders);
             res.render('shop/orders', {
@@ -104,12 +104,12 @@ exports.getOrders = (req, res) => {
         });
 };
 
-exports.postOrder = (req, res) => { //TODO add a backup of cart that will never be deleted
+exports.postOrder = (req, res) => {
     req.user
         .populate('cart.items.productId')
         .execPopulate()
         .then(function (user) {
-            const products = user.cart.items.map(i => ({quantity: i.quantity, product: { ...i.productId._doc }}));  //accessing what is i like populate
+            const products = user.cart.items.map(i => ({quantity: i.quantity, product: {...i.productId._doc}}));  //accessing what is i like populate
             const order = new Order({
                 user: {
                     name: req.user.name,

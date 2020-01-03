@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const {CartStat} = require("./cartStat");
 
 const Schema = mongoose.Schema;
 
@@ -13,13 +14,13 @@ const userSchema = new Schema({
     },
     cart: {
         items: [{
-            productId: {type: Schema.Types.ObjectId, ref:'Product',required: true},
+            productId: {type: Schema.Types.ObjectId, ref: 'Product', required: true},
             quantity: {type: Number, required: true}
         }]
     }
 });
 
-userSchema.methods.addToCart = function(product) {
+userSchema.methods.addToCart = function (product) {
     const cartProductIndex = this.cart.items.findIndex(cp => {
         return cp.productId.toString() === product._id.toString();
     });
@@ -38,18 +39,27 @@ userSchema.methods.addToCart = function(product) {
     this.cart = {
         items: updatedCartItems
     };
-    return this.save(); //the schema save
+
+    let promiseCartStat = CartStat.findOne({userId: this._id}).then((cartStat) => { //the promise of the addStat to chart
+        if (cartStat) {
+            return cartStat.addToStatCart(this._id, product);
+        }
+        const obj = new CartStat({userId: this._id, cartItems: []}); //to create it only with id
+        return obj.addToStatCart(this._id, product)
+    });
+
+    return Promise.all([this.save(), promiseCartStat]); //the schema save
 };
 
-userSchema.methods.removeFromCart = function(productId) {
+userSchema.methods.removeFromCart = function (productId) {
     this.cart.items = this.cart.items.filter(item => {
         return item.productId.toString() !== productId.toString();
     });
     return this.save();
 };
 
-userSchema.methods.clearCart = function() {
-    this.cart = { items: [] };
+userSchema.methods.clearCart = function () {
+    this.cart = {items: []};
     return this.save();
 };
 
