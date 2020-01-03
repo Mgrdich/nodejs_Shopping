@@ -125,3 +125,8 @@ exports.postOrder = (req, res) => {
         console.log(err);
     });
 };
+
+exports.postIncDec = (req, res) => {
+    const qtyAdd = req.body.quantityValue;
+    console.log(qtyAdd);
+};

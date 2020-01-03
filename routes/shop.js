@@ -1,7 +1,7 @@
 const {Router} = require('express');
 
 const router = Router();
-const {getProducts, getIndex, getCart, getCheckout, getOrders, getProduct, postCart, postCartDeleteProduct,postOrder} = require('../controllers/shop');
+const {getProducts, getIndex, getCart, postIncDec, getOrders, getProduct, postCart, postCartDeleteProduct,postOrder} = require('../controllers/shop');
 
 router.get('/', getIndex);
 
@@ -20,5 +20,7 @@ router.post('/cart-delete-item', postCartDeleteProduct);
 router.get('/orders', getOrders);
 
 router.post('/create-order', postOrder);
+
+router.post('/cartQuantity',postIncDec)
 
 module.exports = router;
