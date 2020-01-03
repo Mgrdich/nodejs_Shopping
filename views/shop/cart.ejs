@@ -17,6 +17,7 @@
                     </form>
                     <form action="/cartQuantity" id="incrementDecrement" method="POST">
                         <input type="hidden" value="" name="quantityValue" class="quantityValue">
+                        <input type="hidden" value="<%= p.productId._id %>" name="productId">
                         <button class="btn danger incDec" type="button" value="1">+</button>
                         <button class="btn danger incDec" type="button" value="-1">-</button>
                     </form>

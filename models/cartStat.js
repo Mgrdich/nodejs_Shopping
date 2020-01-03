@@ -36,4 +36,15 @@ cartStatSchema.methods.addToStatCart = function (userId, product) {  //it cannot
     return this.save();
 };
 
+cartStatSchema.methods.addQtyStatCart = function (productId,qtyAdd) {  //it cannot be done together because of the delete case
+    const cartProductIndex = this["cartItems"].findIndex(cp => {
+        return cp.productId.toString() === productId.toString();
+    });
+
+    this["cartItems"][cartProductIndex].quantity += qtyAdd;
+
+    return this.save();
+};
+
+
 exports.CartStat = mongoose.model('CartStat', cartStatSchema);

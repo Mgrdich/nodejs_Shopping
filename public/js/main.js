@@ -15,15 +15,16 @@ function menuToggleClickHandler() {
     sideDrawer.classList.add('open');
 }
 
-function handleIncDec () {
-  hiddenQuant.value = this.value;
-  const form = document.getElementById("incrementDecrement");
-  form.submit();
+function handleIncDec() {
+    hiddenQuant.value = this.value;
+    const form = document.getElementById("incrementDecrement");
+    form.submit();
 }
 
 backdrop.addEventListener('click', backdropClickHandler);
 menuToggle.addEventListener('click', menuToggleClickHandler);
 
-incDec[0].addEventListener('click',handleIncDec);
-incDec[1].addEventListener('click',handleIncDec);
-
+if (incDec.length) {
+    incDec[0].addEventListener('click', handleIncDec);
+    incDec[1].addEventListener('click', handleIncDec);
+}

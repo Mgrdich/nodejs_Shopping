@@ -128,5 +128,11 @@ exports.postOrder = (req, res) => {
 
 exports.postIncDec = (req, res) => {
     const qtyAdd = req.body.quantityValue;
-    console.log(qtyAdd);
+    const prodId = req.body.productId;
+    req.user.addProdQty(prodId, qtyAdd)
+        .then(function () {
+            res.redirect('/');
+        }).catch(function (err) {
+        console.log(err);
+    })
 };
