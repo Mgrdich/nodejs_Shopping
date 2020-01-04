@@ -1,18 +1,34 @@
+const {User} = require("../models/user");
+
 exports.getLogin = (req, res) => {
 
     res.render('auth/login', {
         pageTitle: 'Login',
         path: '/login',
-        isAuth:req.session.isLoggedIn
+        isAuth: req.session.isLoggedIn
     });
 };
 
 exports.postLogin = (req, res) => {
-    const {email, password} = req.body;
+    User.findById('5e0cba048ac37ef54cfa7f57')
+        .then(user => {
+            req.session.isLoggedIn = true;
+            req.session.user = user;
+            res.redirect('/');
+/*
+            req.session.save(err => {
+                console.log(err);
 
-    req.session.isLoggedIn = true;
+            });
+*/
+        }).catch(function (err) {
+        console.log(err);
+    });
+};
 
-    if (email === 'mgo@mgo.com' && password === 'mgo') {
+exports.postLogout = (req, res) => {
+    req.session.destroy(function (err) {
         res.redirect('/');
-    }
+        console.log(err);
+    });
 };

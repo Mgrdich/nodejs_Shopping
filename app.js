@@ -38,16 +38,18 @@ app.use(
 
 app.use((req, res, next) => {
 
-    User.findById("5e0cba048ac37ef54cfa7f57")
-        .then(function (user) {
-            req.user = user; //storing it as a request
+    if (!req.session.user) {
+        return next();
+    }
+    User.findById(req.session.user._id)
+         .then(user => {
+            req.user = user; //to mongoose we link the functions to it
             next();
         }).catch(function (err) {
-        console.log(err);
+            console.log(err);
     });
 
 });
-
 
 app.use('/admin', adminRoutes);
 
