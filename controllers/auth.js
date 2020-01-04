@@ -3,13 +3,15 @@ exports.getLogin = (req, res) => {
     res.render('auth/login', {
         pageTitle: 'Login',
         path: '/login',
-        isAuth:req.isLoggedIn
+        isAuth:req.session.isLoggedIn
     });
 };
 
 exports.postLogin = (req, res) => {
     const {email, password} = req.body;
-    res.setHeader('Set-Cookie','loggedIn=true; HttpOnly');
+
+    req.session.isLoggedIn = true;
+
     if (email === 'mgo@mgo.com' && password === 'mgo') {
         res.redirect('/');
     }
