@@ -10,6 +10,7 @@ app.set('views', 'views');
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
+const authRoutes = require("./routes/auth");
 const {User} = require("./models/user");
 
 app.use(bodyParser.urlencoded({
@@ -32,13 +33,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/admin', adminRoutes);
 
-app.use(adminRoutes);
-
 app.use(shopRoutes);
+
+app.use(authRoutes);
 
 app.use(get404);
 
-mongoose.connect("mongodb://localhost:27017/ShopNode",{ useNewUrlParser: true, useUnifiedTopology: true  })
+mongoose.connect("mongodb://localhost:27017/ShopNode", {useNewUrlParser: true, useUnifiedTopology: true})
     .then(function () {
         app.listen(6969);
     }).catch(function (err) {
