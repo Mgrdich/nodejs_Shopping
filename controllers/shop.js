@@ -20,7 +20,6 @@ exports.getProduct = (req, res) => {
 
     Product.findById(prodId)
         .then(function (product) {
-            console.log(product);
             res.render('shop/product-detail', {
                 product: product,
                 pageTitle: product.title,
@@ -82,8 +81,6 @@ exports.postCartDeleteProduct = (req, res) => {
         console.log(err);
     })
 };
-
-//TODO implement decrement and increment method inside the cart
 
 exports.getCheckout = (req, res) => {
     res.render('shop/checkout', {
