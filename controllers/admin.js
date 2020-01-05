@@ -5,7 +5,6 @@ exports.getAddProduct = (req, res) => {
         pageTitle: 'Add Product',
         path: '/admin/add-product',
         editing: false,
-        isAuth:req.session.isLoggedIn
     });
 };
 
@@ -15,9 +14,9 @@ exports.postAddProduct = (req, res) => {
     const price = req.body.price;
     const description = req.body.description;
     const product = new Product({
-        title:title,
-        price:price,
-        description:description,
+        title: title,
+        price: price,
+        description: description,
         imageUrl: imageUrl,
         userId: req.user //it will pick the id for you mongoose
     });
@@ -46,7 +45,6 @@ exports.getEditProduct = (req, res) => {
                 path: '/admin/edit-product',
                 editing: editMode,
                 product: product,
-                isAuth:req.session.isLoggedIn
             });
         })
 };
@@ -78,7 +76,6 @@ exports.getProducts = (req, res) => {
                 pageTitle: 'Admin Products',
                 path: '/admin/products',
                 hasProducts: products.length > 0,
-                isAuth:req.session.isLoggedIn
             });
         }).catch(function (err) {
         console.log(err);
