@@ -5,7 +5,7 @@ exports.getLogin = (req, res) => {
     res.render('auth/login', {
         pageTitle: 'Login',
         path: '/login',
-        isAuth: req.session.isLoggedIn
+
     });
 };
 
@@ -13,7 +13,7 @@ exports.getSignUp = (req, res) => {
     res.render('auth/signup', {
         pageTitle: 'Sign up',
         path: '/signup',
-        isAuth: req.session.isLoggedIn
+
     });
 };
 
@@ -23,7 +23,7 @@ exports.postLogin = (req, res) => {
     User.findOne({email: email})
         .then(user => {
             if (!user) {
-                res.redirect('/login')
+                return res.redirect('/login');
             }
             compare(password, user.password)
                 .then(function (result) {

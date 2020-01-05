@@ -9,7 +9,7 @@ exports.getProducts = (req, res) => {
                 pageTitle: 'All Products',
                 path: '/products',
                 hasProducts: products.length > 0,
-                isAuth:req.session.isLoggedIn
+
             });
         }).catch(function (err) {
         console.log(err);
@@ -25,7 +25,6 @@ exports.getProduct = (req, res) => {
                 product: product,
                 pageTitle: product.title,
                 path: `/products`,
-                isAuth:req.session.isLoggedIn
             });
         }).catch(function (err) {
         console.log(err);
@@ -40,7 +39,6 @@ exports.getIndex = (req, res) => {
                 pageTitle: 'Shop',
                 path: '/',
                 hasProducts: products.length > 0,
-                isAuth:req.session.isLoggedIn
             });
         }).catch(function (err) {
         console.log(err);
@@ -57,7 +55,6 @@ exports.getCart = (req, res) => {
                 path: '/cart',
                 pageTitle: 'Your Cart',
                 products: products.length ? products : [],
-                isAuth:req.session.isLoggedIn
             });
         }).catch(function (err) {
         console.log(err);
@@ -90,7 +87,6 @@ exports.getCheckout = (req, res) => {
     res.render('shop/checkout', {
         path: '/checkout',
         pageTitle: 'Checkout',
-        isAuth:req.session.isLoggedIn
     })
 };
 
@@ -102,7 +98,6 @@ exports.getOrders = (req, res) => {
                 path: '/orders',
                 pageTitle: 'Orders',
                 orders: orders ? orders : [],
-                isAuth:req.session.isLoggedIn
             })
         });
 };
@@ -115,7 +110,7 @@ exports.postOrder = (req, res) => {
             const products = user.cart.items.map(i => ({quantity: i.quantity, product: {...i.productId._doc}}));  //accessing what is i like populate
             const order = new Order({
                 user: {
-                    name: req.user.name,
+                    email: req.user.email,
                     userId: req.user //mongoose does the rest
                 },
                 products: products

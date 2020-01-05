@@ -3,19 +3,20 @@ const {Router} = require('express');
 
 const router = Router();
 
-// /admin/add-product => GET
-router.get('/add-product', getAddProduct);
+const {isAuth} = require("../middleware/is-auth");
 
-// // /admin/products => GET
-router.get('/products', getProducts);
+//admin/add-product => GET
+router.get('/add-product', isAuth, getAddProduct);
 
-// // /admin/add-product => POST
-router.post('/add-product', postAddProduct);
-//
-router.get('/edit-product/:productId', getEditProduct);
+// /admin/products => GET
+router.get('/products', isAuth, getProducts);
 
-router.post('/edit-product', postEditProduct);
+router.post('/add-product', isAuth, postAddProduct);
 
-router.post('/delete-product', postDeleteProduct);
+router.get('/edit-product/:productId', isAuth, getEditProduct);
 
-module.exports = router;
+router.post('/edit-product', isAuth, postEditProduct);
+
+router.post('/delete-product', isAuth, postDeleteProduct);
+
+module.exports =  router;
