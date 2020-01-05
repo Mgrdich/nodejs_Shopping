@@ -3,42 +3,63 @@ const bodyParser = require('body-parser');
 const app = express();
 const path = require('path');
 const {get404} = require("./controllers/error");
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const session = require("express-session");
+const MongoDbStore = require("connect-mongodb-session")(session);
+
+const MONGODB_URI = "mongodb://localhost:27017/ShopNode";
+
+const store = new MongoDbStore({
+    uri: MONGODB_URI,
+    collection: 'sessions'
+});
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
+const authRoutes = require("./routes/auth");
 const {User} = require("./models/user");
 
 app.use(bodyParser.urlencoded({
     extended: false
 }));
 
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(
+    session({
+        secret: 'my secret is long string',
+        resave: false,
+        saveUninitialized: false,
+        store: store
+    }));
+
 app.use((req, res, next) => {
 
-    User.findById("5e0cba048ac37ef54cfa7f57")
-        .then(function (user) {
-            req.user = user; //storing it as a request
+    if (!req.session.user) {
+        return next();
+    }
+    User.findById(req.session.user._id)
+         .then(user => {
+            req.user = user; //to mongoose we link the functions to it
             next();
         }).catch(function (err) {
-        console.log(err);
+            console.log(err);
     });
 
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/admin', adminRoutes);
-
-app.use(adminRoutes);
 
 app.use(shopRoutes);
 
+app.use(authRoutes);
+
 app.use(get404);
 
-mongoose.connect("mongodb://localhost:27017/ShopNode",{ useNewUrlParser: true, useUnifiedTopology: true  })
+mongoose.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true})
     .then(function () {
         app.listen(6969);
     }).catch(function (err) {
