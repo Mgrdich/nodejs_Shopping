@@ -21,6 +21,6 @@ router.get('/orders', getOrders);
 
 router.post('/create-order', postOrder);
 
-router.post('/cartQuantity',postIncDec)
+router.post('/cartQuantity',postIncDec);
 
 module.exports = router;
