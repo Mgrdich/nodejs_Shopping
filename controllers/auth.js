@@ -1,6 +1,13 @@
 const {User} = require("../models/user");
 const {hash, compare} = require("bcryptjs");
+const nodemailer = require("nodemailer");
+const sendGridTransport = require("nodemailer-sendgrid-transport");
 
+const transporter = nodemailer.createTransport(sendGridTransport({
+    auth: {
+        api_key: "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"
+    }
+}));
 exports.getLogin = (req, res) => {
     let mess = req.flash('error');
     res.render('auth/login', {
@@ -56,7 +63,6 @@ exports.postLogout = (req, res) => {
 };
 
 exports.postSignUp = (req, res) => {
-    console.log("signup");
     const email = req.body.email;
     const password = req.body.password;
     const confimPassword = req.body.confirmPassword;
@@ -64,7 +70,7 @@ exports.postSignUp = (req, res) => {
     User.findOne({email: email})
         .then(function (userDoc) {
             if (userDoc) {
-                req.flash('error','Email exists already please pick different one');
+                req.flash('error', 'Email exists already please pick different one');
                 return res.redirect('/signup'); //bcz of this return is not a promise
             }
             return hash(password, 12)
@@ -79,8 +85,14 @@ exports.postSignUp = (req, res) => {
 
                 }).then(function () {
                     res.redirect('/login');
+                    return transporter.sendMail({
+                        to: email,
+                        from: 'admin@adminShop.com',
+                        subject: 'Signup succeeded',
+                        html: '<h1>You Successfully Signed up</h1>'
+                    }); //returned a promise
                 })
-        }).catch(function (err) {
-        console.log(err);
+        } ).catch(function (err) {
+        console.log();
     });
 };
