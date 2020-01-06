@@ -4,11 +4,7 @@ const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const sendGridTransport = require("nodemailer-sendgrid-transport"); //TODO change me
 
-const transporter = nodemailer.createTransport(sendGridTransport({
-    auth: {
-        api_key: "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"
-    }
-}));
+
 exports.getLogin = (req, res) => {
     let mess = req.flash('error');
     res.render('auth/login', {
@@ -117,12 +113,13 @@ exports.postSignUp = (req, res) => {
 
                 }).then(function () {
                     res.redirect('/login');
-                    return transporter.sendMail({
+                    /*return transporter.sendMail({
                         to: email,
                         from: 'admin@adminShop.com',
                         subject: 'Signup succeeded',
                         html: '<h1>You Successfully Signed up</h1>'
                     }); //returned a promise
+                    */
                 })
         }).catch(function (err) {
         console.log(err);
@@ -147,14 +144,14 @@ exports.postReset = (req, res) => {
                 return user.save();
             }).then(function () {
             res.redirect('/');
-            return transporter.sendMail({
+            /*return transporter.sendMail({
                 to: email,
                 from: 'admin@adminShop.com',
                 subject: 'Password',
                 html: `
                      <p>you Requested Password reset</p>
                     <p>click this <a href="http://localhost:6969/reset/${token}">link to reset the password</a></p>`
-            });
+            });*/
         }).catch(function () {
 
         });
