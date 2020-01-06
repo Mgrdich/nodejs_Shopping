@@ -56,6 +56,10 @@ exports.postEditProduct = (req, res) => {
     const updatedDesc = req.body.description;
     const prodId = req.body.productId;
     Product.findById(prodId).then(function (product) {
+        if (product.userId.toString() !== req.user._id.toString()) { //TODO make this a utility function
+            res.redirect('/');
+            return Promise.reject();
+        }
         product.title = updatedTitle;
         product.price = updatedPrice;
         product.imageUrl = updatedImageUrl;
@@ -69,7 +73,7 @@ exports.postEditProduct = (req, res) => {
 };
 
 exports.getProducts = (req, res) => {
-    Product.find()
+    Product.find({userId: req.user._id}) //thanks to the middleware
         .then(function (products) {
             res.render('admin/products', {
                 prods: products,
@@ -83,7 +87,7 @@ exports.getProducts = (req, res) => {
 };
 
 exports.postDeleteProduct = (req, res) => {
-    Product.findByIdAndRemove(req.body.id)
+    Product.deleteOne({_id: req.body.id, userId: req.body._id})
         .then(function () {
             res.redirect('/products');
         }).catch(function (err) {

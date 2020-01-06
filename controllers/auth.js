@@ -2,7 +2,7 @@ const {User} = require("../models/user");
 const {hash, compare} = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-const sendGridTransport = require("nodemailer-sendgrid-transport");
+const sendGridTransport = require("nodemailer-sendgrid-transport"); //TODO change me
 
 const transporter = nodemailer.createTransport(sendGridTransport({
     auth: {
@@ -38,7 +38,6 @@ exports.getReset = (req, res) => {
 
 exports.getNewPassword = (req, res) => {
     const token = req.params.token;
-    console.log("token",token==="fcfe8f87e884d5cd28b82a21383902e6f8887f3f7d8185d132075dfffc36a838");
     User.findOne({resetToken: token,resetTokenExp:{$gt:Date.now()}})
         .then(user => {
             let message = req.flash('error');
