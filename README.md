@@ -1,2 +1,2 @@
 # nodejs_Shopping
-Branch of this project and its database is done by monogdb
+node js application relies in server side rendering for the view and for its database mongodb
