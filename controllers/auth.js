@@ -1,8 +1,8 @@
 const {User} = require("../models/user");
 const {hash, compare} = require("bcryptjs");
-const nodemailer = require("nodemailer");
+// const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-const sendGridTransport = require("nodemailer-sendgrid-transport"); //TODO change me
+// const sendGridTransport = require("nodemailer-sendgrid-transport"); //TODO change me
 
 
 exports.getLogin = (req, res) => {
@@ -152,8 +152,8 @@ exports.postReset = (req, res) => {
                      <p>you Requested Password reset</p>
                     <p>click this <a href="http://localhost:6969/reset/${token}">link to reset the password</a></p>`
             });*/
-        }).catch(function () {
-
+        }).catch(function (err) {
+            console.log(err);
         });
     });
 };

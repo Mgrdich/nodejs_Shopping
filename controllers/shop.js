@@ -126,7 +126,7 @@ exports.postOrder = (req, res) => {
 
 exports.postIncDec = (req, res) => {
     const qtyAdd = +req.body.quantityValue; //converting it to number
-    const prodId = req.body.productId; //TODO fix the Qunatity 0 and negative bug
+    const prodId = req.body.productId;
     req.user.addProdQty(prodId, qtyAdd)
         .then(function () {
             res.redirect('/cart');

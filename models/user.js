@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const {sameObjectId} = require("../util/utility");
 const {CartStat} = require("./cartStat");
 
 const Schema = mongoose.Schema;
@@ -24,7 +25,7 @@ const userSchema = new Schema({
 
 userSchema.methods.addToCart = function (product) {
     const cartProductIndex = this.cart.items.findIndex(cp => {
-        return cp.productId.toString() === product._id.toString();
+        return sameObjectId(cp.productId, product._id);
     });
     let newQuantity = 1;
     const updatedCartItems = [...this.cart.items];
@@ -55,7 +56,7 @@ userSchema.methods.addToCart = function (product) {
 
 userSchema.methods.removeFromCart = function (productId) {
     this.cart.items = this.cart.items.filter(item => {
-        return item.productId.toString() !== productId.toString();
+        return !sameObjectId(item.productId, productId);
     });
     return this.save();
 };
@@ -70,6 +71,12 @@ userSchema.methods.addProdQty = function (productId, qtyAdd) {
         return Promise.reject("not in the array");
     }
     this.cart.items[prodIndex].quantity += qtyAdd;
+
+    if (this.cart.items[prodIndex].quantity <= 0) {
+        this.cart.items = this.cart.items.filter((item, index) => (index !== prodIndex));
+
+        return this.save();
+    }
 
     let promiseCartStat = CartStat.findOne({userId: this._id}).then((cartStat) => { //the promise of the addStat to chart
         //since it should be there to make this work

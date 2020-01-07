@@ -18,13 +18,14 @@ function menuToggleClickHandler() {
 function handleIncDec() {
     hiddenQuant.value = this.value;
     const form = document.getElementById("incrementDecrement");
-    form.submit();
+    form.submit(); //TODO Fix:the wrong form is getting submitted
 }
 
 backdrop.addEventListener('click', backdropClickHandler);
 menuToggle.addEventListener('click', menuToggleClickHandler);
 
-if (incDec.length) {
-    incDec[0].addEventListener('click', handleIncDec);
-    incDec[1].addEventListener('click', handleIncDec);
+
+for (let i = 0; i < incDec.length; i++) {
+    incDec[i].addEventListener('click', handleIncDec);
 }
+
