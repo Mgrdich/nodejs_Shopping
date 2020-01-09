@@ -1,7 +1,6 @@
 const backdrop = document.querySelector('.backdrop');
 const sideDrawer = document.querySelector('.mobile-nav');
 const menuToggle = document.querySelector('#side-menu-toggle');
-const hiddenQuant = document.querySelector('.quantityValue');
 const incDec = document.getElementsByClassName("incDec");
 
 
@@ -15,10 +14,13 @@ function menuToggleClickHandler() {
     sideDrawer.classList.add('open');
 }
 
-function handleIncDec() {
-    hiddenQuant.value = this.value;
-    const form = document.getElementById("incrementDecrement");
-    form.submit(); //TODO Fix:the wrong form is getting submitted
+function handleIncDec(event) {
+    let nber = event.currentTarget.getAttribute('data-form-index');
+    const hiddenQuant = document.querySelector(`.quantityValue_${nber}`);
+    console.log(hiddenQuant);
+    hiddenQuant.value =this.value;
+    const form = document.getElementById(`incrementDecrement_${nber}`);
+    form.submit(); 
 }
 
 backdrop.addEventListener('click', backdropClickHandler);

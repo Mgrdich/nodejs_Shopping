@@ -7,7 +7,7 @@
 <main>
     <% if (products.length > 0) { %>
         <ul class="cart__item-list">
-            <% products.forEach(p => { %>
+            <% products.forEach((p,i) => { %>
                 <li class="cart__item">
                     <h1><%= p.productId.title %></h1>
                     <h2>Quantity: <%= p.quantity %></h2>
@@ -16,12 +16,12 @@
                         <input type="hidden" value="<%= p.productId._id %>" name="productId">
                         <button class="btn danger" type="submit">Delete</button>
                     </form>
-                    <form action="/cartQuantity" id="incrementDecrement" method="POST">
+                    <form action="/cartQuantity" id="incrementDecrement_<%=i%>" method="POST">
                         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                        <input type="hidden" value="" name="quantityValue" class="quantityValue">
+                        <input type="hidden" value="" name="quantityValue" class="quantityValue_<%=i%>">
                         <input type="hidden" value="<%= p.productId._id %>" name="productId">
-                        <button class="btn incDec" type="button" value="1">+</button>
-                        <button class="btn incDec" type="button" value="-1">-</button>
+                        <button class="btn incDec" type="button" data-form-index="<%=i%>" value="1">+</button>
+                        <button class="btn incDec" type="button" data-form-index="<%=i%>" value="-1">-</button>
                     </form>
                 </li>
             <% }) %>
