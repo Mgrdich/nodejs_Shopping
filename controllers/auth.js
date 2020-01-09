@@ -10,7 +10,12 @@ exports.getLogin = (req, res) => {
     res.render('auth/login', {
         pageTitle: 'Login',
         path: '/login',
-        errorMessage: mess.length ? mess : null
+        errorMessage: mess.length ? mess : null,
+        oldInput: {
+            email: '',
+            password: ''
+        },
+        validationErrors: []
     });
 };
 
@@ -70,6 +75,7 @@ exports.postLogin = (req, res) => {
                 email: email,
                 password: password
             },
+            validationErrors: errors.array()
         });
     }
 
@@ -85,6 +91,7 @@ exports.postLogin = (req, res) => {
                             email: email,
                             password: password
                         },
+                        validationErrors: errors.array()
                     });
                 }
             }
@@ -97,12 +104,17 @@ exports.postLogin = (req, res) => {
                             res.redirect('/'); //after the save is done
                         });
                     }
-                    req.flash("error", "Invalid email or password");
-                    res.redirect('/login');
-                }).catch(function (err) {
-
-            });
-
+                    return res.status(422).render('auth/login', {
+                        path: '/login',
+                        pageTitle: 'Login',
+                        errorMessage: 'Invalid email or password.',
+                        oldInput: {
+                            email: email,
+                            password: password
+                        },
+                        validationErrors: []
+                    });
+                });
         }).catch(function (err) {
         console.log(err);
     });
@@ -131,8 +143,9 @@ exports.postSignUp = (req, res) => {
             oldInput: {
                 email: email,
                 password: password,
-                confirmPassword:confirmPassword
-            }
+                confirmPassword: confirmPassword
+            },
+            validationErrors: errors.array()
         });
     }
     hash(password, 12)
