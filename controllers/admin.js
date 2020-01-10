@@ -1,3 +1,4 @@
+const {sameObjectId} = require("../util/utility");
 const {Product} = require("../models/products");
 const {validationResult} = require("express-validator");
 
@@ -79,7 +80,7 @@ exports.postEditProduct = (req, res) => {
     const updatedDesc = req.body.description;
     const prodId = req.body.productId;
     Product.findById(prodId).then(function (product) {
-        if (product.userId.toString() !== req.user._id.toString()) {
+        if (!sameObjectId(product.userId,req.user._id)) {
             res.redirect('/');
             return Promise.reject();
         }
@@ -89,7 +90,7 @@ exports.postEditProduct = (req, res) => {
         product.description = updatedDesc;
         return product.save();
     }).then(function () {
-        res.redirect('/admin/products')
+        res.redirect('/admin/products');
     }).catch(function (err) {
         console.log(err);
     });
@@ -110,7 +111,7 @@ exports.getProducts = (req, res) => {
 };
 
 exports.postDeleteProduct = (req, res) => {
-    Product.deleteOne({_id: req.body.id, userId: req.body._id})
+    Product.deleteOne({_id: req.body.id, userId: req.user._id})
         .then(function () {
             res.redirect('/products');
         }).catch(function (err) {

@@ -198,8 +198,8 @@ exports.postReset = (req, res) => {
                      <p>you Requested Password reset</p>
                     <p>click this <a href="http://localhost:6969/reset/${token}">link to reset the password</a></p>`
             });*/
-        }).catch(function () {
-
+        }).catch(function (err) {
+            console.log(err);
         });
     });
 };

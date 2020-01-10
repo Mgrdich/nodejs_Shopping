@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const {sameObjectId} = require("../util/utility");
 
 const Schema = mongoose.Schema;
 
@@ -16,7 +17,7 @@ const cartStatSchema = new Schema({
 
 cartStatSchema.methods.addToStatCart = function (userId, product) {  //it cannot be done together because of the delete case
     const cartProductIndex = this["cartItems"].findIndex(cp => {
-        return cp.productId.toString() === product._id.toString();
+        return sameObjectId(cp.productId, product._id);
     });
     let newQuantity = 1;
     const updatedCartItems = [...this["cartItems"]];
@@ -36,9 +37,9 @@ cartStatSchema.methods.addToStatCart = function (userId, product) {  //it cannot
     return this.save();
 };
 
-cartStatSchema.methods.addQtyStatCart = function (productId,qtyAdd) {  //it cannot be done together because of the delete case
+cartStatSchema.methods.addQtyStatCart = function (productId, qtyAdd) {  //it cannot be done together because of the delete case
     const cartProductIndex = this["cartItems"].findIndex(cp => {
-        return cp.productId.toString() === productId.toString();
+        return sameObjectId(cp.productId, productId);
     });
 
     this["cartItems"][cartProductIndex].quantity += qtyAdd;
