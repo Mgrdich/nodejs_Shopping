@@ -68,7 +68,9 @@ exports.getEditProduct = (req, res) => {
                 path: '/admin/edit-product',
                 editing: editMode,
                 product: product,
-                errorMessage: []
+                errorMessage: null,
+                validationErrors: [],
+                hasError: false,
             });
         })
 };
@@ -79,6 +81,27 @@ exports.postEditProduct = (req, res) => {
     const updatedImageUrl = req.body.imageUrl;
     const updatedDesc = req.body.description;
     const prodId = req.body.productId;
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(422).render('admin/edit-product', {
+            pageTitle: 'edit Product',
+            path: '/admin/edit-product',
+            editing: true,
+            hasError: true,
+            product: {
+                title: updatedTitle,
+                imageUrl: updatedImageUrl,
+                price: updatedPrice,
+                description: updatedDesc,
+                _id: prodId
+            },
+            errorMessage: errors.array()[0].msg,
+            validationErrors: errors.array()
+        });
+    }
+
     Product.findById(prodId).then(function (product) {
         if (!sameObjectId(product.userId,req.user._id)) {
             res.redirect('/');

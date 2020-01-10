@@ -1,5 +1,5 @@
 const {Router} = require('express');
-const {check,body} = require('express-validator');
+const {check, body} = require('express-validator');
 const {User} = require("../models/user");
 
 const router = Router();
