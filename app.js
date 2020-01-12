@@ -42,6 +42,13 @@ app.use(
     }));
 
 app.use(csrfProtection);
+
+app.use((req, res, next) => {
+    res.locals.isAuth = req.session.isLoggedIn;
+    res.locals.csrfToken = req.csrfToken();
+    next();
+});
+
 app.use(flash());
 
 app.use((req, res, next) => {
@@ -57,16 +64,10 @@ app.use((req, res, next) => {
             req.user = user; //to mongoose we link the functions to it
             next();
         }).catch(function (err) {
-        throw new Error(err);
+        next(new Error(err));
     });
-
 });
 
-app.use((req, res, next) => {
-    res.locals.isAuth = req.session.isLoggedIn;
-    res.locals.csrfToken = req.csrfToken();
-    next();
-});
 
 app.use('/admin', adminRoutes);
 
@@ -79,7 +80,11 @@ app.use('/500',get500);
 app.use(get404);
 
 app.use((error, req, res, next) => {
-    res.redirect('/500');
+    res.status(500).render('500', {
+        pageTitle: 'Page Not Found',
+        path: '/500',
+
+    });
 });
 
 mongoose.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true})

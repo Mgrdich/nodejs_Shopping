@@ -2,6 +2,7 @@ const {User} = require("../models/user");
 const {hash, compare} = require("bcryptjs");
 // const nodemailer = require("nodemailer");
 const crypto = require("crypto");
+const {error500} = require("../util/utility");
 const {validationResult} = require("express-validator");
 // const sendGridTransport = require("nodemailer-sendgrid-transport"); //TODO change me
 
@@ -37,7 +38,7 @@ exports.getReset = (req, res) => {
     });
 };
 
-exports.getNewPassword = (req, res) => {
+exports.getNewPassword = (req, res,next) => {
     const token = req.params.token;
     User.findOne({resetToken: token, resetTokenExp: {$gt: Date.now()}})
         .then(user => {
@@ -55,11 +56,11 @@ exports.getNewPassword = (req, res) => {
 
         })
         .catch(err => {
-            console.log(err);
+            return error500(next,err);
         });
 };
 
-exports.postLogin = (req, res) => {
+exports.postLogin = (req, res,next) => {
     const email = req.body.email;
     const password = req.body.password;
 
@@ -116,7 +117,7 @@ exports.postLogin = (req, res) => {
                     });
                 });
         }).catch(function (err) {
-        console.log(err);
+        return error500(next,err);
     });
 };
 
@@ -127,7 +128,7 @@ exports.postLogout = (req, res) => {
     });
 };
 
-exports.postSignUp = (req, res) => {
+exports.postSignUp = (req, res,next) => {
     const email = req.body.email;
     const password = req.body.password;
     const confirmPassword = req.body.confirmPassword;
@@ -168,11 +169,11 @@ exports.postSignUp = (req, res) => {
         }); //returned a promise
         */
     }).catch(function (err) {
-        console.log(err);
+        return error500(next,err);
     });
 };
 
-exports.postReset = (req, res) => {
+exports.postReset = (req, res,next) => {
     const email = req.body.email;
     crypto.randomBytes(32, (err, buffer) => {
         if (err) {
@@ -199,12 +200,12 @@ exports.postReset = (req, res) => {
                     <p>click this <a href="http://localhost:6969/reset/${token}">link to reset the password</a></p>`
             });*/
         }).catch(function (err) {
-            console.log(err);
+            return error500(next,err);
         });
     });
 };
 
-exports.postNewPassword = (req, res) => {
+exports.postNewPassword = (req, res,next) => {
     const newPassword = req.body.password;
     const userId = req.body.userId;
     const passToken = req.body.passwordToken;
@@ -215,8 +216,7 @@ exports.postNewPassword = (req, res) => {
         resetToken: passToken,
         _id: userId,
         resetTokenExp: {$gt: Date.now()}
-    })
-        .then(function (user) {
+    }).then(function (user) { //TODO change with new Promise Constructor
             resetUser = user;
             return hash(newPassword, 12)
         }).then(function (hashedPass) {
@@ -227,6 +227,6 @@ exports.postNewPassword = (req, res) => {
     }).then(function () {
         res.redirect('/login');
     }).catch(function (err) {
-        console.log(err);
+        return error500(next,err);
     });
 };
