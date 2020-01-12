@@ -1,6 +1,6 @@
 const {getAddProduct, postAddProduct, getProducts, getEditProduct, postEditProduct, postDeleteProduct} = require("../controllers/admin");
 const {Router} = require('express');
-const {check, body} = require('express-validator');
+const {body} = require('express-validator');
 
 const router = Router();
 

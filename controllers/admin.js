@@ -1,3 +1,4 @@
+const {error500} = require("../util/utility");
 const {sameObjectId} = require("../util/utility");
 const {Product} = require("../models/products");
 const {validationResult} = require("express-validator");
@@ -13,7 +14,7 @@ exports.getAddProduct = (req, res) => {
     });
 };
 
-exports.postAddProduct = (req, res) => {
+exports.postAddProduct = (req, res,next) => {
     const title = req.body.title;
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
@@ -37,6 +38,7 @@ exports.postAddProduct = (req, res) => {
         });
     }
     const product = new Product({
+        _id:'sss',
         title: title,
         price: price,
         description: description,
@@ -47,7 +49,7 @@ exports.postAddProduct = (req, res) => {
         .then(function () {
             res.redirect('/');
         }).catch(function (err) {
-        console.log(err);
+        return error500(next,err);
     });
 
 };
@@ -75,7 +77,7 @@ exports.getEditProduct = (req, res) => {
         })
 };
 
-exports.postEditProduct = (req, res) => {
+exports.postEditProduct = (req, res, next) => {
     const updatedTitle = req.body.title;
     const updatedPrice = req.body.price;
     const updatedImageUrl = req.body.imageUrl;
@@ -103,7 +105,7 @@ exports.postEditProduct = (req, res) => {
     }
 
     Product.findById(prodId).then(function (product) {
-        if (!sameObjectId(product.userId,req.user._id)) {
+        if (!sameObjectId(product.userId, req.user._id)) {
             res.redirect('/');
             return Promise.reject();
         }
@@ -115,11 +117,11 @@ exports.postEditProduct = (req, res) => {
     }).then(function () {
         res.redirect('/admin/products');
     }).catch(function (err) {
-        console.log(err);
+        return error500(next,err);
     });
 };
 
-exports.getProducts = (req, res) => {
+exports.getProducts = (req, res,next) => {
     Product.find({userId: req.user._id}) //thanks to the middleware
         .then(function (products) {
             res.render('admin/products', {
@@ -129,16 +131,16 @@ exports.getProducts = (req, res) => {
                 hasProducts: products.length > 0,
             });
         }).catch(function (err) {
-        console.log(err);
+        return error500(next,err);
     });
 };
 
-exports.postDeleteProduct = (req, res) => {
+exports.postDeleteProduct = (req, res,next) => {
     Product.deleteOne({_id: req.body.id, userId: req.user._id})
         .then(function () {
             res.redirect('/products');
         }).catch(function (err) {
-        console.log(err);
+        return error500(next,err);
     });
 
 };
