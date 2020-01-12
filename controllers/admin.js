@@ -13,7 +13,7 @@ exports.getAddProduct = (req, res) => {
     });
 };
 
-exports.postAddProduct = (req, res) => {
+exports.postAddProduct = (req, res,next) => {
     const title = req.body.title;
     const imageUrl = req.body.imageUrl;
     const price = req.body.price;
@@ -47,7 +47,9 @@ exports.postAddProduct = (req, res) => {
         .then(function () {
             res.redirect('/');
         }).catch(function (err) {
-        console.log(err);
+        const error =  new Error(err);
+        error.httpStatusCode = 500;
+        return next(error); //skip all middleware go to error handling middleware
     });
 
 };
@@ -75,7 +77,7 @@ exports.getEditProduct = (req, res) => {
         })
 };
 
-exports.postEditProduct = (req, res) => {
+exports.postEditProduct = (req, res, next) => {
     const updatedTitle = req.body.title;
     const updatedPrice = req.body.price;
     const updatedImageUrl = req.body.imageUrl;
@@ -103,7 +105,7 @@ exports.postEditProduct = (req, res) => {
     }
 
     Product.findById(prodId).then(function (product) {
-        if (!sameObjectId(product.userId,req.user._id)) {
+        if (!sameObjectId(product.userId, req.user._id)) {
             res.redirect('/');
             return Promise.reject();
         }
@@ -115,7 +117,9 @@ exports.postEditProduct = (req, res) => {
     }).then(function () {
         res.redirect('/admin/products');
     }).catch(function (err) {
-        console.log(err);
+        const error =  new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
     });
 };
 
