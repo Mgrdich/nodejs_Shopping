@@ -38,7 +38,6 @@ exports.postAddProduct = (req, res,next) => {
         });
     }
     const product = new Product({
-        _id:'sss',
         title: title,
         price: price,
         description: description,
