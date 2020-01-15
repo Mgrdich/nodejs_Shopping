@@ -1,6 +1,7 @@
 const {error500} = require("../util/utility");
 const {Product} = require("../models/products");
 const {Order} = require("../models/orders");
+const path =require("/util/path");
 
 exports.getProducts = (req, res, next) => {
     Product.find()
@@ -136,4 +137,9 @@ exports.postIncDec = (req, res, next) => {
         }).catch(function (err) {
         return error500(next,err);
     })
+};
+
+exports.getInvoice = (req, res, next) => {
+    const orderId = req.params.orderId;
+    const invoiceName = `invoice-${orderId}.pdf `
 };

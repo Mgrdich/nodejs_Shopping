@@ -14,7 +14,7 @@ exports.getAddProduct = (req, res) => {
     });
 };
 
-exports.postAddProduct = (req, res,next) => {
+exports.postAddProduct = (req, res, next) => {
     const title = req.body.title;
     // const imageUrl = req.body.imageUrl;
     const image = req.file;
@@ -22,7 +22,7 @@ exports.postAddProduct = (req, res,next) => {
     const description = req.body.description;
     const errors = validationResult(req);
 
-    if(!image) {
+    if (!image) {
         return res.status(422).render('admin/edit-product', {
             pageTitle: 'Add Product',
             path: '/admin/edit-product',
@@ -53,7 +53,6 @@ exports.postAddProduct = (req, res,next) => {
             validationErrors: errors.array()
         });
     }
-
     const imageUrl = image.path;
 
     const product = new Product({
@@ -67,7 +66,7 @@ exports.postAddProduct = (req, res,next) => {
         .then(function () {
             res.redirect('/');
         }).catch(function (err) {
-        return error500(next,err);
+        return error500(next, err);
     });
 
 };
@@ -98,7 +97,7 @@ exports.getEditProduct = (req, res) => {
 exports.postEditProduct = (req, res, next) => {
     const updatedTitle = req.body.title;
     const updatedPrice = req.body.price;
-    const updatedImageUrl = req.body.imageUrl;
+    const image = req.file;
     const updatedDesc = req.body.description;
     const prodId = req.body.productId;
 
@@ -129,17 +128,19 @@ exports.postEditProduct = (req, res, next) => {
         }
         product.title = updatedTitle;
         product.price = updatedPrice;
-        product.imageUrl = updatedImageUrl;
         product.description = updatedDesc;
+        if (image) {
+            product.imageUrl = image.path;
+        }
         return product.save();
     }).then(function () {
         res.redirect('/admin/products');
     }).catch(function (err) {
-        return error500(next,err);
+        return error500(next, err);
     });
 };
 
-exports.getProducts = (req, res,next) => {
+exports.getProducts = (req, res, next) => {
     Product.find({userId: req.user._id}) //thanks to the middleware
         .then(function (products) {
             res.render('admin/products', {
@@ -149,16 +150,16 @@ exports.getProducts = (req, res,next) => {
                 hasProducts: products.length > 0,
             });
         }).catch(function (err) {
-        return error500(next,err);
+        return error500(next, err);
     });
 };
 
-exports.postDeleteProduct = (req, res,next) => {
+exports.postDeleteProduct = (req, res, next) => {
     Product.deleteOne({_id: req.body.id, userId: req.user._id})
         .then(function () {
             res.redirect('/products');
         }).catch(function (err) {
-        return error500(next,err);
+        return error500(next, err);
     });
 
 };

@@ -1,4 +1,4 @@
-const {getAddProduct, postAddProduct, getProducts, getEditProduct, postEditProduct, postDeleteProduct} = require("../controllers/admin");
+const {getAddProduct, postAddProduct, getProducts, getEditProduct, postEditProduct, postDeleteProduct,getInvoice} = require("../controllers/admin");
 const {Router} = require('express');
 const {body} = require('express-validator');
 
