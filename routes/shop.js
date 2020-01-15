@@ -1,7 +1,7 @@
 const {Router} = require('express');
 
 const router = Router();
-const {getProducts, getIndex, getCart, postIncDec, getOrders, getProduct, postCart, postCartDeleteProduct, postOrder} = require('../controllers/shop');
+const {getProducts, getIndex, getCart, postIncDec, getOrders, getProduct, postCart, postCartDeleteProduct, postOrder,getInvoice} = require('../controllers/shop');
 const {isAuth} = require("../middleware/is-auth");
 
 router.get('/', getIndex);
@@ -23,5 +23,7 @@ router.get('/orders', isAuth, getOrders);
 router.post('/create-order', isAuth, postOrder);
 
 router.post('/cartQuantity', isAuth, postIncDec);
+
+router.get('/orders/:orderId',isAuth , getInvoice);
 
 module.exports = router;

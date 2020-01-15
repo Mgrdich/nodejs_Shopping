@@ -1,4 +1,4 @@
-const {getAddProduct, postAddProduct, getProducts, getEditProduct, postEditProduct, postDeleteProduct} = require("../controllers/admin");
+const {getAddProduct, postAddProduct, getProducts, getEditProduct, postEditProduct, postDeleteProduct,getInvoice} = require("../controllers/admin");
 const {Router} = require('express');
 const {body} = require('express-validator');
 
@@ -19,7 +19,7 @@ router.post(
             .isString()
             .isLength({min: 3})
             .trim(),
-        body('imageUrl').isURL(),
+        /*body('imageUrl').isURL(), */
         body('price').isFloat().custom(value => {
             return value > 0;
         }),
@@ -39,7 +39,7 @@ router.post(
             .isString()
             .isLength({min: 3})
             .trim(),
-        body('imageUrl').isURL(),
+        /*body('imageUrl').isURL(),*/
         body('price').isFloat(),
         body('description')
             .isLength({min: 5, max: 400})
