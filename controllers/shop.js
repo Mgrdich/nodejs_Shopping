@@ -4,6 +4,7 @@ const {Order} = require("../models/orders");
 const path = require("path");
 const fs = require("fs");
 const PDFDocument = require('pdfkit');
+const {sameObjectId} = require("../util/utility");
 
 
 exports.getProducts = (req, res, next) => {
@@ -151,8 +152,7 @@ exports.getInvoice = (req, res, next) => {
                 return next(new Error('No order found.'));
             }
             console.log("start1");
-            if (order.user.userId.toString() !== req.user._id.toString()) { //TODO change it
-                
+            if (!sameObjectId(order.user.userId,req.user._id)) {
                 return next(new Error('Unauthorized'));
             }
             const invoiceName = 'invoice-' + orderId + '.pdf';

@@ -216,7 +216,7 @@ exports.postNewPassword = (req, res,next) => {
         resetToken: passToken,
         _id: userId,
         resetTokenExp: {$gt: Date.now()}
-    }).then(function (user) { //TODO change with new Promise Constructor
+    }).then(function (user) {
             resetUser = user;
             return hash(newPassword, 12)
         }).then(function (hashedPass) {
