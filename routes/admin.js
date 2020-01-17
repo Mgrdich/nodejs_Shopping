@@ -1,4 +1,4 @@
-const {getAddProduct, postAddProduct, getProducts, getEditProduct, postEditProduct, postDeleteProduct,getInvoice} = require("../controllers/admin");
+const {getAddProduct, postAddProduct, getProducts, getEditProduct, postEditProduct, deleteProduct} = require("../controllers/admin");
 const {Router} = require('express');
 const {body} = require('express-validator');
 
@@ -49,6 +49,6 @@ router.post(
     postEditProduct
 );
 
-router.post('/delete-product', isAuth, postDeleteProduct);
+router.delete('/product/:productId', isAuth, deleteProduct);
 
 module.exports = router;

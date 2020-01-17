@@ -162,7 +162,7 @@ exports.postOrder = (req, res, next) => {
     });
 };
 
-exports.postIncDec = (req, res, next) => {
+exports.postIncDec = (req, res, next) => { //TODO make it with json
     const qtyAdd = +req.body.quantityValue; //converting it to number
     const prodId = req.body.productId;
     req.user.addProdQty(prodId, qtyAdd)
