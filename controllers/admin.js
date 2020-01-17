@@ -162,7 +162,7 @@ exports.postDeleteProduct = (req, res, next) => {
             if (!product) {
                 return next(new Error('Product not found.'));
             }
-            deleteFile(product.imageUrl);
+            deleteFile(product.imageUrl,next);
             return Product.deleteOne({_id: prodId, userId: req.user._id});
         }).then(function () {
         res.redirect('/admin/products');

@@ -191,6 +191,7 @@ form {
 
 .card__image img {
   width: 100%;
+  height: 350px;
 }
 
 .card__actions {
@@ -260,4 +261,23 @@ form {
   .user-message {
     width: 30rem;
   }
+}
+.pagination {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.pagination a {
+  text-decoration: none;
+  color: #00695c;
+  padding: 0.5rem;
+  border: 1px solid #00695c;
+  margin: 0 1rem;
+}
+
+.pagination a:hover,
+.pagination a:active,
+.pagination a.active {
+  background: #00695c;
+  color: white;
 }
