@@ -16,8 +16,6 @@ router.post('/cart', isAuth, postCart);
 
 router.post('/cart-delete-item', isAuth, postCartDeleteProduct);
 
-// router.get('/checkout', getCheckout);
-
 router.get('/orders', isAuth, getOrders);
 
 router.post('/create-order', isAuth, postOrder);

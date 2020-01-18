@@ -19,8 +19,7 @@ router.post(
             .isString()
             .isLength({min: 3})
             .trim(),
-        /*body('imageUrl').isURL(), */
-        body('price').isFloat().custom(value => {
+        body('price').isFloat().custom(function (value) {
             return value > 0;
         }),
         body('description')
@@ -39,7 +38,6 @@ router.post(
             .isString()
             .isLength({min: 3})
             .trim(),
-        /*body('imageUrl').isURL(),*/
         body('price').isFloat(),
         body('description')
             .isLength({min: 5, max: 400})

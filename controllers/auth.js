@@ -20,15 +20,21 @@ exports.getLogin = (req, res) => {
     });
 };
 
+
 exports.getSignUp = (req, res) => {
     let mess = req.flash('error');
     res.render('auth/signup', {
-        pageTitle: 'Sign up',
         path: '/signup',
-        errorMessage: mess.length ? mess : null
+        pageTitle: 'Signup',
+        errorMessage: mess.length ? mess : null,
+        oldInput: {
+            email: '',
+            password: '',
+            confirmPassword: ''
+        },
+        validationErrors: []
     });
 };
-
 exports.getReset = (req, res) => {
     let mess = req.flash('error');
     res.render('auth/reset', {

@@ -3,8 +3,9 @@ const {sameObjectId} = require("../util/utility");
 const {Product} = require("../models/products");
 const {validationResult} = require("express-validator");
 const {deleteFile} = require("../util/fileHelper");
+const {ITEMS_PER_PAGE} = require("../routes/constants");
 
-const ITEMS_PER_PAGE = 2;
+
 
 exports.getAddProduct = (req, res) => {
     res.render('admin/edit-product', {
@@ -187,7 +188,6 @@ exports.getProducts = (req, res, next) => {
             return error500(next, err);
         });
 };
-
 
 exports.deleteProduct = (req, res, next) => {
     const prodId = req.params.productId;

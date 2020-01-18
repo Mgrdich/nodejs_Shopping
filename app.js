@@ -8,10 +8,10 @@ const session = require("express-session");
 const MongoDbStore = require("connect-mongodb-session")(session);
 const csrf = require("csurf");
 const flash = require("connect-flash");
-
+const {MONGODB_URI} = require("./routes/constants");
 const multer = require('multer');
 
-const MONGODB_URI = "mongodb://localhost:27017/ShopNode";
+
 
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -43,6 +43,7 @@ app.set('views', 'views');
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
+const {PORT_NUMBER} = require("./routes/constants");
 const {User} = require("./models/user");
 
 app.use(bodyParser.urlencoded({
@@ -108,7 +109,7 @@ app.use((error, req, res, next) => {
 
 mongoose.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true})
     .then(function () {
-        app.listen(6969);
+        app.listen(PORT_NUMBER);
     }).catch(function (err) {
     console.log(err);
 });

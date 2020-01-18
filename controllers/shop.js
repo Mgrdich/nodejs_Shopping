@@ -4,9 +4,9 @@ const {Order} = require("../models/orders");
 const path = require("path");
 const fs = require("fs");
 const PDFDocument = require('pdfkit');
+const {ITEMS_PER_PAGE} = require("../routes/constants");
 const {sameObjectId} = require("../util/utility");
 
-const ITEMS_PER_PAGE = 1;
 
 
 exports.getProducts = (req, res, next) => {
