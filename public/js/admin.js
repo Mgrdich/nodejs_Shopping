@@ -9,10 +9,10 @@ const deleteProduct = btn => {
         headers: {
             'csrf-token': csrf
         }
-    }).then(result => {
+    }).then(function (result) {
         return result.json();
     })
-    .then(data => {
+    .then(function()  {
             productElement.parentNode.removeChild(productElement);
         }).catch(function (err) {
         console.log(err);

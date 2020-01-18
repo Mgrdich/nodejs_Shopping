@@ -17,7 +17,6 @@ function menuToggleClickHandler() {
 function handleIncDec(event) {
     let nber = event.currentTarget.getAttribute('data-form-index');
     const hiddenQuant = document.querySelector(`.quantityValue_${nber}`);
-    console.log(hiddenQuant);
     hiddenQuant.value =this.value;
     const form = document.getElementById(`incrementDecrement_${nber}`);
     form.submit(); 
